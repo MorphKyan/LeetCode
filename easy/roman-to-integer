@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int romanToInt(string s) {
+        int sSize=s.size();
+        int ret=0;
+        for(int i=0;i<sSize;i++){ //因为string最后有一个'/0'所以不会越界，正好'/0'对应0，比其他都小
+            if(wordToInt(s[i])<wordToInt(s[i+1])) ret-=wordToInt(s[i]);
+            else ret+=wordToInt(s[i]);
+        }
+        return ret;
+    }
+
+private:
+    int wordToInt(char x){
+        switch(x){
+            case 'I':
+                return 1;
+            case 'V':
+                return 5;
+            case 'X':
+                return 10;
+            case 'L':
+                return 50;
+            case 'C':
+                return 100;
+            case 'D':
+                return 500;
+            case 'M':
+                return 1000;
+        }
+        return -1;
+    }
+};
