@@ -1,0 +1,91 @@
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        double res=0;
+        int size1=nums1.size();
+        int size2=nums2.size();
+        int mid=(size1+size2)/2;
+        bool odd=false;
+        if((size1+size2)%2==1){//奇数
+            odd=true;
+            mid++;
+        }
+        int count=0,i=0,j=0;
+        if(!odd){
+            while(i<size1&&j<size2){
+                count++;
+                if(count==mid){
+                    if(i<size1-1&&nums1[i+1]<nums2[j]){
+                        res=(nums1[i]+nums1[i+1])/2.0;
+                        return res;
+                    }
+                    if(j<size2-1&&nums2[j+1]<nums1[i]){
+                        res=(nums2[j]+nums2[j+1])/2.0;
+                        return res;
+                    }
+                    res=(nums1[i]+nums2[j])/2.0;
+                    return res;
+                }
+                if(nums1[i]<=nums2[j]){
+                    i++;
+                }
+                else{
+                    j++;
+                }
+            }
+            while(j<size2){
+                count++;
+                if(count==mid){
+                    res=(nums2[j]+nums2[j+1])/2.0;
+                    return res;
+                }
+                j++;
+            }
+            while(i<size1){
+                count++;
+                if(count==mid){
+                    res=(nums1[i]+nums1[i+1])/2.0;
+                    return res;
+                }
+                i++;
+            }
+        }
+        else{
+            while(i<size1&&j<size2){
+                if(nums1[i]<=nums2[j]){
+                    count++;
+                    if(count==mid){
+                        res=nums1[i];
+                        return res;
+                    }
+                    i++;
+                }
+                else{
+                    count++;
+                    if(count==mid){
+                        res=nums2[j];
+                        return res;
+                    }
+                    j++;
+                }
+            }
+            while(j<size2){
+                count++;
+                if(count==mid){
+                    res=nums2[j];
+                    return res;
+                }
+                j++;
+            }
+            while(i<size1){
+                count++;
+                if(count==mid){
+                    res=nums1[i];
+                    return res;
+                }
+                i++;
+            }
+        }
+        return res;
+    }
+};
