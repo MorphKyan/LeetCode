@@ -1,0 +1,30 @@
+class Solution {
+public:
+    bool isPalindrome(int x){
+        return isPalindrome2(x);
+    }
+
+    bool isPalindrome1(int x) {
+        if(x<0) return false;
+        long tmp=0;
+        int xx=x;
+        while(xx!=0){
+            tmp=tmp*10+xx%10;
+            xx/=10;
+        }
+        if(x==tmp) return true;
+        return false;
+    }
+
+    bool isPalindrome2(int x){
+        if(x<0||(x%10==0&&x!=0)) return false;
+        //小于0，除了0意外末尾是0的都不行
+        int rev=0;
+        while(x>rev){
+            rev=rev*10+x%10;
+            x/=10;
+        }
+        //只用算一半的数
+        return x==rev || x==rev/10;
+    }
+};
