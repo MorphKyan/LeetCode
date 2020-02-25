@@ -1,0 +1,16 @@
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        int i=0;
+        if(strs.empty()) return "";
+        while(1){
+            char tmp=strs[0][i];
+            for(std::vector<string>::iterator it=strs.begin();it!=strs.end();++it){
+                if((*it)[i]=='\0'||(*it)[i]!=tmp) return strs[0].substr(0,i);
+                //string.substr(开始，结束) ||string.substr(从头开始到第几个)
+            }
+            ++i;
+        }
+        return "";
+    }
+};
