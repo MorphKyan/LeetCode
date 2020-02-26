@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int proc = 0;
+        int c_array = 0;
+        int size=nums.size();
+        while(proc < size)
+        {
+            if(nums[proc]==val){
+                ++proc;
+                continue;
+            }
+            nums[c_array]=nums[proc];
+            ++proc;
+            ++c_array;
+        }
+        return c_array;
+    }
+};
