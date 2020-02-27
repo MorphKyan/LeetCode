@@ -1,7 +1,7 @@
 class Solution {
 public:
     int searchInsert(vector<int>&nums,int target){
-        return searchInsert3(nums,target);
+        return searchInsert2(nums,target);
     }
 
     //暴力从头开始找
@@ -26,13 +26,12 @@ public:
             if(nums[mid]==target) return mid;
             if(nums[mid]<target){
                 left=mid+1;
-                ++mid;
             }
             else if(nums[mid]>target){
                 right=mid-1;
             }
         }
-        return mid;
+        return left;
     }
 
     //减治法
