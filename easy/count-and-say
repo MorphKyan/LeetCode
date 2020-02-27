@@ -1,0 +1,79 @@
+class Solution {
+public:
+    string countAndSay(int n) {
+        return countAndSay1(n);
+    }
+    
+    string countAndSay1(int n) {
+        string pre;
+        string now="1";
+        char c=' ';
+        int count=0;
+        for(int i=1;i<n;++i){
+            pre=now;
+            now.clear();
+            c=pre[0];
+            count=0;
+            for(int j=0;j<=pre.size();++j){
+                if(pre[j]!=c){
+                    now+=to_string(count);
+                    now.insert(now.end(),c);
+                    c=pre[j];
+                    count=1;
+                }
+                else{
+                    ++count;
+                }
+            }
+        }
+        return now;
+    }
+
+    string countAndSay2(int n) {
+        string s[n+1];
+        s[1]="1";
+        char c=' ';
+        int count=0;
+        for(int i=2;i<=n;++i){
+            c=s[i-1][0];
+            count=0;
+            s[i]="";
+            for(int j=0;j<=s[i-1].size();++j){
+                if(s[i-1][j]!=c){
+                    s[i]+=to_string(count);
+                    s[i].insert(s[i].end(),c);
+                    c=s[i-1][j];
+                    count=1;
+                }
+                else{
+                    ++count;
+                }
+            }
+        }
+        return s[n];
+    }
+
+    //此方法免去count定义和加法，更快速，测试使用s[n+1]数组不能加速反而更占内存。
+    string countAndSay3(int n) {
+        string s[n+1];
+        int i=0,j=0,t=0;
+        s[1]="1";
+        char ans;
+        for(i=2;i<=n;i++)
+        {
+            s[i]="";j=0;
+            ans=s[i-1][0];  //初始化
+            while(j<s[i-1].length())
+            {
+                t=j+1;
+                while(ans==s[i-1][t]) t++; //判断当前字符出现的次数
+                s[i]+='0'+(t-j);  //输出当前字符的次数
+                s[i]+=ans;      //输出当前字符
+                ans=s[i-1][t];  //当前字符结束，跳转到下一字符
+                j=t;            //跳到下一字符的指针位置，加速遍历
+            }
+        }
+        return s[n];
+    }
+
+};
