@@ -3,7 +3,9 @@ public:
     int maxSubArray(vector<int>& nums) {
         if(nums.empty()) return 0;
         int ans=nums[0];
+        //初始化：dp[0] = nums[0]
         int sum=0;
+        //从状态转移方程中，我们只关注前一个状态的值，所以不需要开一个数组记录位置所有子序列和，只需要两个变量。
         for(int i=0;i<nums.size();++i){
             if(sum<0){
                 sum=nums[i];
@@ -12,7 +14,11 @@ public:
                 sum+=nums[i];
             }
             ans=max(ans,sum);
+            //状态转移方程为：dp[i] = max(dp[i - 1] + nums[i], nums[i])
+            //可以算作动态规划算法，也可以叫贪心算法
         }
         return ans;
     }
 };
+
+分治法的话，分为左、右都是直接调用，中则为跨越中点的最大子序，向左右延申，在n的时间内即可找出。
