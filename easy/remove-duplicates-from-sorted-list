@@ -28,7 +28,7 @@ public:
         return head;
     }
 
-//减少空间使用，没有删除
+//减少空间使用，没有删除，更快
     ListNode* deleteDuplicates1(ListNode* head) {
         ListNode *p=head;
         while(p!=NULL){
