@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+    // 使用两个队列交替使用
+        queue<TreeNode*> q;
+        queue<TreeNode*> q1;
+        vector<vector<int>> res;
+        if(!root) return res;
+        q.push(root);
+        while(1){
+            vector<int> temp;
+            // 一轮从q里面读取，将子节点写到q1里面
+            while(!q.empty()){
+                if(q.front()){
+                    temp.push_back(q.front()->val);
+                    if(q.front()->left) q1.push(q.front()->left);
+                    if(q.front()->right) q1.push(q.front()->right);
+                }
+                q.pop();
+            }
+            // 交换
+            q=q1;
+            res.insert(res.begin(),temp);
+            // 没有更深一层，也就是q里面所有的都没有子节点
+            if(q1.empty()) break;
+            // 清空
+            queue<TreeNode*> empty;
+            swap(empty,q1);
+        }
+    return res;
+    }
+};
