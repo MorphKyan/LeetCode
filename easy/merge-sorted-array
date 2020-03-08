@@ -1,0 +1,25 @@
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        // 处理a组为空的情况
+        if(m==0) nums1=nums2;
+        --m,--n;
+        while(m>=0&&n>=0){
+            if(nums1[m]<nums2[n]){
+                nums1[m+n+1]=nums2[n];
+                --n;
+            }
+            else{
+                nums1[m+n+1]=nums1[m];
+                --m;
+            }
+        }
+        // 处理a数组已经遍历完，但b组还没到底的情况
+        if(m==-1){
+            while(n>=0){
+                nums1[n]=nums2[n];
+                --n;
+            }
+        }
+    }
+};
