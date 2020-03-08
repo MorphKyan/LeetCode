@@ -1,0 +1,66 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+// 递归
+    bool isSymmetric1(TreeNode* root) {
+        if(!root) return true;
+        return subIsSymmetric(root->left,root->right);
+    }
+    
+    bool subIsSymmetric(TreeNode* a,TreeNode* b){
+        if((!a&&b)||(a&&!b)) return false;
+        if(!a&&!b) return true;
+        if(a->val==b->val){
+            return subIsSymmetric(a->right,b->left)&&subIsSymmetric(a->left,b->right);
+        }
+        else return false;
+    }
+
+//迭代
+    bool isSymmetric(TreeNode* root){
+        if(!root) return true;
+        list<TreeNode*> list0;
+        list<TreeNode*> list1;
+        if((!root->left&&root->right)||(root->left&&!root->right)) return false;
+        if(!root->left&&!root->right) return true;
+        list0.push_back(root->left);
+        list0.push_back(root->right);
+        while(!list0.empty()){
+            // 从中间往两边比较，顺便插入，层序遍历，每层对比一次
+            list<TreeNode*>::iterator it=list0.begin();
+            for(int j=0;j<list0.size()/2;++j){
+                ++it;
+            }
+            list<TreeNode*>::iterator it1=it;
+            --it;
+            while(it1!=list0.end()){
+                if((*it)==NULL&&(*it1)==NULL){
+                    --it;
+                    ++it1;
+                    continue;
+                }
+                if((*it)==NULL||(*it1)==NULL) return false;
+                if((*it)->val==(*it1)->val){
+                    list1.push_front((*it)->right);
+                    list1.push_front((*it)->left);
+                    list1.push_back((*it1)->left);
+                    list1.push_back((*it1)->right);
+                    --it;
+                    ++it1;
+                }
+                else return false;
+            }
+            list0=list1;
+            list1.clear();
+        }
+        return true;
+    }
+};
