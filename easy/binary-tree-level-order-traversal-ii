@@ -39,3 +39,11 @@ public:
     return res;
     }
 };
+
+// auto的用法
+std::vector<std::string>::iterator i=vs.begin();  
+for(;i<vs.end();i++)  
+{ }  
+简化为
+for(auto i=vs.begin();;i<vs.end();i++)  
+{ }  
