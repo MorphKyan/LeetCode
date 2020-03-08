@@ -29,13 +29,15 @@ public:
             }
             // 交换
             q=q1;
-            res.insert(res.begin(),temp);
+            //res.insert(res.begin(),temp); // 在begin插入的话，右面元素每次都要复制，因为STL的原因，所以很慢
+            res.push_back(temp)
             // 没有更深一层，也就是q里面所有的都没有子节点
             if(q1.empty()) break;
             // 清空
             queue<TreeNode*> empty;
             swap(empty,q1);
         }
+    reverse(res.begin(),res.end()); // 改用reverse就好很多
     return res;
     }
 };
