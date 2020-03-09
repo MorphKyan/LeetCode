@@ -1,0 +1,27 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return sub(nums,0,nums.size()-1);
+    }
+
+    TreeNode* sub(vector<int>& nums,int left,int right){
+        if (left>right) return NULL;
+        //int mid=(left+right)/2;
+        //int mid=left+(right-left)/2; // 这样写可以防止溢出
+        int mid=left+((right-left)>>1); // 右移运算更快
+        // 由于+/-运算符优先级比移位运算符高，所以在写公式时候一定要记得添加括号
+        TreeNode* t=new TreeNode(nums[mid]);
+        t->left=sub(nums,left,mid-1);
+        t->right=sub(nums,mid+1,right);
+        return t;
+    }
+};
