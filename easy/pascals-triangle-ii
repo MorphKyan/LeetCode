@@ -1,0 +1,32 @@
+class Solution {
+public:
+// 同上题思路
+    vector<int> getRow1(int rowIndex) {
+        ++rowIndex;
+        vector<vector<int>> res(rowIndex);
+
+        for (int i = 0; i < rowIndex; ++i) {
+            for (int j = 0; j <= i; ++j) {
+                // 实际上在rowIndex=1时两条件相等只触发一次，其他前后分别触发一次，妙
+                if (j == 0 || j == i)
+                    res[i].push_back(1);
+                else
+                    res[i].push_back(res[i - 1][j - 1] + res[i - 1][j]);
+            }
+        }
+        return res[rowIndex-1];
+    }
+
+// 空间复杂度n
+    vector<int> getRow(int rowIndex){
+        vector<int> res;
+        for(int i=0;i<=rowIndex;++i){
+            res.push_back(1);
+            for(int j=i-1;j>0;--j){ //从后往前符合vector特性
+                res[j]+=res[j-1];
+            }
+        }
+        return res;
+    }
+// 我服了，最后一种居然内存和时间都不如上边的
+};
