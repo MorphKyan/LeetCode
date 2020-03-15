@@ -1,0 +1,18 @@
+#include <iostream>
+
+void makeOne(int* check,int m,int i,int j){
+    *(check+m*i+j)=1;
+}
+
+int main() {
+    // i,j为维度，后面用作为索引
+    int i=2,j=2;
+    // 保存每行有几个元素，在makeOne中计算地址时用到
+    int m=2;
+    // 初始化
+    int check[i][j]={0};
+    // 传递的时候需要传入check[0]，这个地址是第一个元素的地址
+    // 最后两个参数就是索引了
+    makeOne(check[0],m,1,1);
+    std::cout<<check[1][1];
+}
