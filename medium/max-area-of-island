@@ -28,3 +28,32 @@ public:
         return sum;
     }
 };
+
+// 改进变量 简洁
+class Solution {
+public:
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        if(grid.size()==0||grid[0].size()==0) return 0;
+        int islandSize=0;
+        for(int i=0;i<grid.size();++i){
+            for(int j=0;j<grid[0].size();++j){
+                if(!grid[i][j]) continue;
+                islandSize=max(islandSize,helper(grid,i,j));
+            }
+        }
+        return islandSize;
+    }
+
+    int helper(vector<vector<int>>& grid,int i,int j){
+        if(i<0||j<0||i>=grid.size()||j>=grid[0].size()||!grid[i][j]) return 0;
+        int sum=1;
+        //为了确保每个土地访问不超过一次，我们每次经过一块土地时,
+        //将这块土地的值置为 0。这样我们就不会多次访问同一土地。
+        grid[i][j]=0;
+        sum+=helper(grid,i,j-1);
+        sum+=helper(grid,i,j+1);
+        sum+=helper(grid,i-1,j);
+        sum+=helper(grid,i+1,j);
+        return sum;
+    }
+};
