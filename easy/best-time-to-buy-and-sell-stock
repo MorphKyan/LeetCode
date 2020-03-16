@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.empty()) return 0;
+        int res=0;
+        int minPrice=prices[0];
+        for(int i=1;i<prices.size();++i){
+            minPrice=min(prices[i],minPrice);
+            res=max(res,prices[i]-minPrice);
+            // 这样写居然比先判断分两种情况处理更快
+        }
+        return res;
+    }
+};
