@@ -10,6 +10,7 @@ public:
                 ++count;
             }
             else{
+                // 转string是to_string(),string转int用stoi()
                 ret+=pre+to_string(count); // 此时是引用，如果ret=ret+pre就是先建立一个新的会溢出
                 count=1;
                 pre=S[i];
