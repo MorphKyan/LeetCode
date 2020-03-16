@@ -1,0 +1,20 @@
+class Solution {
+public:
+    string compressString(string S) {
+        if(S.empty()) return S; // 本来是与下面那句调换的，这样写就不用申请新的元素了
+        string ret;
+        char pre=S[0];
+        int count=1;
+        for(int i=1;i<=S.size();++i){
+            if(S[i]==pre){
+                ++count;
+            }
+            else{
+                ret+=pre+to_string(count); // 此时是引用，如果ret=ret+pre就是先建立一个新的会溢出
+                count=1;
+                pre=S[i];
+            }
+        }
+        return ret.length() >= S.length() ? S : ret; // 简洁方便，学！
+    }
+};
