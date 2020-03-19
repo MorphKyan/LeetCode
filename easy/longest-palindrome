@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int longestPalindrome(string s) {
+        int alphabet[52]={0};
+        for(int i=0;i<s.size();++i){
+            if(s[i]<'Z') ++alphabet[s[i]-'A'];
+            else ++alphabet[s[i]-'a'+26];
+        }
+        int sum=0;
+        bool odd=false;
+        for(int i=0;i<52;++i){
+            if(alphabet[i]%2==0) sum+=alphabet[i];
+            else {
+                sum+=alphabet[i]-1;
+                odd=true;
+            }
+        }
+        return sum+odd;
+    }
+};
+
+// 例如一个数 N,(N&1)的结果就是取二进制的最末位。
+// 这可以用来判断一个整数的奇偶，
+// 二进制的最末位为0表示该数为偶数，
+// 最末位为1表示该数为奇数.
