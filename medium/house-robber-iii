@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// 树形动态规划，每个节点分两种状态，父不偷就不管子偷不偷的最大值，父偷就要子不偷的最大值
+class Solution {
+public:
+    int rob(TreeNode* root) {
+        int* res=new int[2];
+        res=helper(root);
+        return max(res[0],res[1]);
+    }
+
+// 0是不偷，1是偷
+    int* helper(TreeNode* root){
+        int* res=new int[2];
+        memset(res,0,2*sizeof(int));
+        if(!root) return res;
+
+        int* left=new int[2];
+        left=helper(root->left);
+        int* right=new int[2];
+        right=helper(root->right);
+
+        res[0]=max(left[0],left[1])+max(right[0],right[1]);
+        res[1]=left[0]+right[0]+root->val;
+        return res;
+    }
+
+// 优化传参，减少内存占用，没用数组
+    void rob_task(TreeNode* root,int *val1,int *val2)
+    {
+        if(root == NULL){
+            *val1 = 0;
+            *val2 = 0;
+            return;
+        }
+        int result1,result2,result3,result4;
+
+        rob_task(root->right,&result1,&result2);
+        rob_task(root->left,&result3,&result4);
+
+        *val1 = root->val + result2+result4;//偷
+        *val2 = max(result1,result2) +  max(result3,result4);
+    }
+    int rob(TreeNode* root) {
+        int res1,res2;
+        rob_task(root,&res1,&res2);
+        return max(res1,res2);
+    }
+
+};
