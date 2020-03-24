@@ -10,7 +10,7 @@
 // 树形动态规划，每个节点分两种状态，父不偷就不管子偷不偷的最大值，父偷就要子不偷的最大值
 class Solution {
 public:
-    int rob(TreeNode* root) {
+    int rob1(TreeNode* root) {
         int* res=new int[2];
         res=helper(root);
         return max(res[0],res[1]);
