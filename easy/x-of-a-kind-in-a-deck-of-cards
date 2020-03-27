@@ -1,0 +1,17 @@
+class Solution {
+public:
+    bool hasGroupsSizeX(vector<int>& deck) {
+        int count[10000]={0};
+        for(int d:deck) ++count[d];
+        int temp_gcd=-1;
+        for(int i=0;i<10000;++i){
+            if(count[i]){
+                if(~temp_gcd) temp_gcd=gcd(temp_gcd,count[i]);
+                else temp_gcd=count[i];
+            }
+        }
+        return temp_gcd >= 2;
+    }
+};
+
+// 最大公约数
