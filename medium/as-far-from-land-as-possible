@@ -1,0 +1,83 @@
+// 超级节点广度遍历
+class Solution {
+public:
+    int maxDistance(vector<vector<int>>& grid) {
+        int dx[4]={0,0,1,-1},dy[4]={1,-1,0,0};
+        queue<pair<int,int>> q;
+        int m=grid.size(),n=grid[0].size();
+        // 陆地入队
+        for(int i=0;i<m;++i){
+            for(int j=0;j<n;++j){
+                if(grid[i][j]) q.push({i,j});
+            }
+        }
+
+        bool has_ocean=false;
+        bool has_land=false;
+        pair<int,int> point;
+        while(!q.empty()){
+            point=q.front();q.pop();
+            has_land=true;
+            for(int i=0;i<4;++i){
+                int tx=point.first+dx[i];
+                int ty=point.second+dy[i];
+                if(tx<0 || tx>=m || ty<0 || ty>=n || grid[tx][ty]) continue;
+                grid[tx][ty]=grid[point.first][point.second]+1; // 无需额外数组标志
+                has_ocean=true;
+                q.push({tx,ty});
+            }
+        }
+
+        if(!has_land||!has_ocean) return -1;
+        return grid[point.first][point.second]-1;
+    }
+};
+
+// 每个都算广度遍历
+class Solution {
+public:
+    static constexpr int dx[4]={-1,0,1,0},dy[4]={0,1,0,-1};
+    static constexpr int MAX_N=100+5;
+
+    struct Coordinate{
+        int x,y,step;
+    };
+
+    int n,m;
+
+    bool vis[MAX_N][MAX_N];
+
+    int maxDistance(vector<vector<int>>& grid) {
+        this->m=grid.size();
+        this->n=grid[0].size();
+        int res=-1;
+        for(int i=0;i<grid.size();++i){
+            for(int j=0;j<grid.size();++j){
+                if(!grid[i][j]){
+                    res=max(res,find(grid,i,j));
+                }
+            }
+        }
+        return res;
+    }
+
+    int find(vector<vector<int>>& grid,int x,int y){
+        memset(vis,0,sizeof vis);
+        queue<Coordinate> q;
+        q.push({x,y,0});
+        vis[x][y]=1;
+        while(!q.empty()){
+            auto t=q.front();
+            q.pop();
+            for(int i=0;i<4;++i){
+                int tx=t.x+dx[i],ty=t.y+dy[i];
+                if(tx>=0&&tx<m&&ty>=0&&ty<n&&!vis[tx][ty]){
+                    q.push({tx,ty,t.step+1});
+                    vis[tx][ty]=1;
+                    if(grid[tx][ty]) return t.step+1;
+                }
+            }
+        }
+        return -1;
+    }
+};
