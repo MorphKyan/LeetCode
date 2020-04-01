@@ -1,0 +1,25 @@
+class Solution {
+public:
+    vector<int> sortArray(vector<int>& nums) {
+        int big[50001]={0};
+        int small[50001]={0};
+        vector<int> res;
+        for(int i=0;i<nums.size();++i){
+            if(nums[i]>=0) ++big[nums[i]];
+            else ++small[-nums[i]];
+        }
+        for(int i=50000;i>0;--i){
+            while(small[i]){
+                res.push_back(-i);
+                --small[i];
+            }
+        }
+        for(int i=0;i<50001;++i){
+            while(big[i]){
+                res.push_back(i);
+                --big[i];
+            }
+        }
+        return res;
+    }
+};
