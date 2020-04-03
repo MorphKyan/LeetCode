@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int myAtoi(string str) {
+        if(str.length()==0) return 0;
+        int res=0;
+        bool minus=false;
+        // 去掉开头空格
+        int i=0;
+        for(;i<str.length()&&str[i]==' ';++i);
+        // 判断符号
+        if(str[i]=='-'||str[i]=='+'){
+            minus=str[i]=='-';
+            ++i;
+        }
+        for(;i<str.length()&&isdigit(str[i]);++i){
+            if(res<=(INT_MAX-str[i]+'0')/10)
+                res=res*10-'0'+str[i];
+            else return minus?INT_MIN:INT_MAX;
+        }
+        return minus?-res:res;
+    }
+};
