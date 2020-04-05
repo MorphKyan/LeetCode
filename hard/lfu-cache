@@ -1,0 +1,70 @@
+struct Node{
+    int key,val,freq;
+    Node(int _key,int _val,int _freq):key(_key),val(_val),freq(_freq){}
+};
+class LFUCache {
+    int capacity;
+    int min_freq;
+    unordered_map<int,list<Node>::iterator> key_table;
+    unordered_map<int,list<Node>> freq_table;
+public:
+    LFUCache(int _capacity) {
+        capacity=_capacity;
+        min_freq=1;
+        key_table.clear();
+        freq_table.clear();
+    }
+    
+    int get(int key) {
+        if(capacity==0) return -1;
+        auto it=key_table.find(key);
+        if(it==key_table.end()) return -1;
+        auto node=it->second;
+        int val=node->val,freq=node->freq;
+        freq_table[freq].erase(node);
+        if(freq_table[freq].size()==0){
+            freq_table.erase(freq);
+            if(min_freq==freq) ++min_freq;
+        }
+        freq_table[freq+1].push_front(Node(key,val,freq+1));
+        key_table[key]=freq_table[freq+1].begin();
+        return val;
+    }
+    
+    void put(int key, int value) {
+        if(capacity==0) return; // 这种void的返回，直接return就行。
+        auto it=key_table.find(key);
+        if(it==key_table.end()){
+            if(key_table.size()==capacity){
+                auto de=freq_table[min_freq].back();
+                key_table.erase(de.key);
+                freq_table[min_freq].pop_back();
+                if(freq_table[min_freq].size()==0) freq_table.erase(min_freq);
+            }
+            freq_table[1].push_front(Node(key,value,1));
+            min_freq=1;
+            key_table[key]=freq_table[1].begin();
+            // 上边等同于下面这句，用emplace，insert会报错，要么就insert加上make_pair
+            //key_table.emplace(key,freq_table[1].begin());
+            //key_table.insert(make_pair(key,freq_table[1].begin()));
+        }
+        else{
+            auto node=it->second;
+            int freq=node->freq;
+            freq_table[freq].erase(node);
+            if(freq_table[freq].size()==0){
+                freq_table.erase(freq);
+                if(min_freq==freq) ++min_freq;
+            }
+            freq_table[freq+1].push_front(Node(key,value,freq+1));
+            key_table[key]=freq_table[freq+1].begin();
+        }
+    }
+};
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache* obj = new LFUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
