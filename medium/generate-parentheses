@@ -1,0 +1,44 @@
+class Solution {
+    vector<string> res;
+public:
+    vector<string> generateParenthesis(int n) {
+        dfs(n,n,"");
+        return res;
+    }
+
+    void dfs(int left,int right,string curStr){
+        if(left==0&&right==0){
+            res.push_back(curStr);
+            return;
+        }
+        if(left>0) dfs(left-1,right,curStr+"(");
+        if(right>left) dfs(left,right-1,curStr+")");
+    }
+};
+
+// 回溯法
+class Solution {
+    void backtrack(vector<string>& ans, string& cur, int open, int close, int n) {
+        if (cur.size() == n * 2) {
+            ans.push_back(cur);
+            return;
+        }
+        if (open < n) {
+            cur.push_back('(');
+            backtrack(ans, cur, open + 1, close, n);
+            cur.pop_back(); // 回溯法状态恢复，关键
+        }
+        if (close < open) {
+            cur.push_back(')');
+            backtrack(ans, cur, open, close + 1, n);
+            cur.pop_back();
+        }
+    }
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> result;
+        string current;
+        backtrack(result, current, 0, 0, n);
+        return result;
+    }
+};
