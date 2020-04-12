@@ -1,0 +1,158 @@
+// 复杂的处理加逼近
+class Solution {
+public:
+    vector<double> intersection(vector<int>& start1, vector<int>& end1, vector<int>& start2, vector<int>& end2) {
+        vector<double> res;
+        if(start1[0]>end1[0]){
+            int tmp[2];
+            tmp[0]=start1[0];
+            tmp[1]=start1[1];
+            start1[0]=end1[0];
+            start1[1]=end1[1];
+            end1[0]=tmp[0];
+            end1[1]=tmp[1];
+        }
+        if(start2[0]>end2[0]){
+            int tmp[2];
+            tmp[0]=start2[0];
+            tmp[1]=start2[1];
+            start2[0]=end2[0];
+            start2[1]=end2[1];
+            end2[0]=tmp[0];
+            end2[1]=tmp[1];
+        }
+
+        if(start1[0]==end1[0]&&start2[0]==end2[0]){
+            if(start1[0]==start2[0]){
+                int min1=min(start1[1],end1[1]);
+                int max2=max(start2[1],end2[1]);
+                if(min1>=max2){
+                    res.push_back(start1[0]);
+                    res.push_back(min(min1,max2));
+                }
+            }
+            std::cout<<"第零种情况";
+            return res;
+        }
+        if(start1[0]==end1[0]){ // 第一条垂直
+            if(start2[0]<=start1[0]&&end2[1]>=start1[0]){
+                double k2=(end2[1]-start2[1])/(double)(end2[0]-start2[0]);
+                double midy=k2*(start1[0]-start2[0])+start2[1];
+                if(midy>=start1[1]&&midy<=end1[1]){
+                res.push_back(start1[0]);
+                res.push_back(midy);
+                }
+            }
+            std::cout<<"第一条垂直";
+            return res;
+        }
+        if(start2[0]==end2[0]){ // 第二条垂直
+            if(start1[0]<=start2[0]&&start1[1]>=start2[0]){
+                double k1=(end1[1]-start1[1])/(double)(end1[0]-start1[0]);
+                double midy=k1*(start2[0]-start1[0])+start1[1];
+                if(midy>=start2[1]&&midy<=end2[1]){
+                res.push_back(start2[0]);
+                res.push_back(midy);
+                }
+            }
+            std::cout<<"第二条垂直";
+            return res;
+        }
+        double k1=(end1[1]-start1[1])/(double)(end1[0]-start1[0]);
+        double k2=(end2[1]-start2[1])/(double)(end2[0]-start2[0]);
+        double startx=max(start1[0],start2[0]);
+        double endx=min(end1[0],end2[0]);
+        if(startx>endx){
+            std::cout<<"startx>endx";
+            return res;
+        }
+        double y1s,y2s,y1e,y2e;
+        y1s=k1*(startx-start1[0])+start1[1];
+        y2s=k2*(startx-start2[0])+start2[1];
+        y1e=k1*(endx-start1[0])+start1[1];
+        y2e=k2*(endx-start2[0])+start2[1];
+        bool bigs=y1s>y2s; // 第一条的起始高
+        bool bige=y1e>y2e; // 第一条结束高
+
+        if(k1==k2){
+            double y;
+            if(start1[0]<=start2[0]){
+                y=k1*(start2[0]-start1[0])+start1[1];
+                if(y==start2[1]){
+                    res.push_back(start2[0]);
+                    res.push_back(start2[1]);
+                }
+            }
+            else{
+                y=k1*(start1[0]-start2[0])+start2[1];
+                if(y==start1[1]){
+                    res.push_back(start1[0]);
+                    res.push_back(start1[1]);
+                }
+
+            }
+            std::cout<<"k相等";
+            return res;
+        }
+
+        std::cout<<"开始计算\n";
+        double mid,midy1,midy2;
+        std::cout<<startx<<" "<<endx;
+        while(endx-startx>1e-7){
+            mid=(endx+startx)/2;
+            midy1=k1*(mid-start1[0])+start1[1];
+            midy2=k2*(mid-start2[0])+start2[1];
+            std::cout<<"mid:"<<mid<<" y1:"<<midy1<<" y2:"<<midy2<<std::endl;
+            if(midy1==midy2){
+                res.push_back(mid);
+                res.push_back(midy1);
+                return res;
+            }
+            if((bigs&&(midy1>midy2))||(!bigs&&(midy1<midy2))){ // 大的依旧在上边
+                startx=mid;
+                continue;
+            }
+            if((bigs&&(midy1<midy2))||(!bigs&&(midy1>midy2))){ // 反之
+                endx=mid;
+                continue;
+            }
+            std::cout<<"bug";
+        }
+        if(abs(midy1-midy2)<1e-5){
+            res.push_back(mid);
+            res.push_back(midy1);
+        }
+        return res;
+    }
+};
+
+// 简单的行列式
+class Solution {
+private:
+    const double E = 1e-6;
+    bool inLine(double x, double s, double e) {   // 判断x是否在s->e或e->s之间
+        if (abs(x-s) < E || abs(x-e) < E) return true;
+        return (x-s>0 && e-x>0) || (x-e>0 && s-x>0);
+    }
+
+public:
+    vector<double> intersection(vector<int>& start1, vector<int>& end1, vector<int>& start2, vector<int>& end2) {
+        int x1 = start1[0], y1 = start1[1], x2 = end1[0], y2 = end1[1];
+        int x3 = start2[0], y3 = start2[1], x4 = end2[0], y4 = end2[1];
+        int a11 = y2-y1, a12 = x1-x2, b1 = x1*y2-x2*y1;
+        int a21 = y4-y3, a22 = x3-x4, b2 = x3*y4-x4*y3;
+        int D = a11*a22-a12*a21, D1 = b1*a22-a12*b2, D2 = a11*b2-b1*a21;
+        if (D == 0 && D1 == 0) {  //平行且共线
+            if (min(x3, x4) > max(x1, x2) || min(x1, x2) > max(x3, x4)) return {};   //分离
+            if (min(y3, y4) > max(y1, y2) || min(y1, y2) > max(y3, y4)) return {};   //分离
+            vector<vector<int>> v{{x1, y1},{x2, y2},{x3, y3},{x4, y4}};
+            sort(v.begin(), v.end());
+            return {(double)v[1][0], (double)v[1][1]};  //取第二小的即所求交点
+        }
+        if (D != 0) {   //不平行
+            double x0 = D1/(double)D, y0 = D2/(double)D;   //交点
+            if (inLine(x0, x1, x2) && inLine(x0, x3, x4) && inLine(y0, y1, y2) && inLine(y0, y3, y4)) return {x0, y0};
+        }
+        return {};
+    }
+};
