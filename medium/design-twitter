@@ -1,0 +1,83 @@
+class Twitter {
+    struct Node{
+        unordered_set<int> followee;
+        list<int> tweet;
+    };
+    unordered_map<int,Node> user;
+    unordered_map<int,int> tweetTime;
+    int time;
+public:
+    /** Initialize your data structure here. */
+    Twitter() {
+        time=0;
+        user.clear();
+    }
+
+    void init(int userId) {
+        user[userId].followee.clear();
+        user[userId].tweet.clear();
+    }
+    
+    /** Compose a new tweet. */
+    void postTweet(int userId, int tweetId) {
+        if (user.find(userId) == user.end()) {
+            init(userId);
+        }
+        user[userId].tweet.push_front(tweetId);
+        tweetTime[tweetId]=++time;
+    }
+    
+    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    vector<int> getNewsFeed(int userId) {
+        vector<int> res;res.clear();
+        int i=0;
+        for(auto it=user[userId].tweet.begin();it!=user[userId].tweet.end()&&i<10;++it,++i){
+            res.emplace_back(*it);
+        }
+        for(int followeeId:user[userId].followee){
+            if(followeeId==userId) continue;
+            vector<int> tmp;tmp.clear();
+            int i=0;
+            auto it=user[followeeId].tweet.begin();
+            while(i<res.size()&&it!=user[followeeId].tweet.end()){
+                if(tweetTime[(*it)]>tweetTime[res[i]]){
+                    tmp.emplace_back(*it);
+                    ++it;
+                }else{
+                    tmp.emplace_back(res[i]);
+                    ++i;
+                }
+                if(tmp.size()==10) break;
+            }
+            for(;i<res.size()&&tmp.size()<10;++i) tmp.emplace_back(res[i]);
+            for(;it!=user[followeeId].tweet.end()&&tmp.size()<10;++it) tmp.emplace_back(*it);
+            res.assign(tmp.begin(),tmp.end());
+        }
+        return res;
+    }
+    
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    void follow(int followerId, int followeeId) {
+        if (user.find(followerId) == user.end()) {
+            init(followerId);
+        }
+        if (user.find(followeeId) == user.end()) {
+            init(followeeId);
+        }
+        user[followerId].followee.insert(followeeId);
+    }
+    
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    void unfollow(int followerId, int followeeId) {
+        user[followerId].followee.erase(followeeId);
+    }
+};
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter* obj = new Twitter();
+ * obj->postTweet(userId,tweetId);
+ * vector<int> param_2 = obj->getNewsFeed(userId);
+ * obj->follow(followerId,followeeId);
+ * obj->unfollow(followerId,followeeId);
+ */
