@@ -1,0 +1,58 @@
+// 初始的想法，导致空区间没了
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        int ma=0;
+        bool check[65535]={false};
+        for(int i=0;i<intervals.size();++i){
+            memset(check+intervals[i][0],true,sizeof(bool)*(intervals[i][1]-intervals[i][0]));
+            ma=max(ma,intervals[i][1]);
+        }
+        vector<vector<int>> res;
+        bool flag=false;
+        int start=0;
+        for(int i=0;i<ma;++i){
+            // 上升沿
+            if(!flag&&check[i]){
+                start=i;
+                flag=true;
+            }
+            // 下降沿
+            else if(flag&&!check[i]){
+                vector<int> tmp;
+                tmp.push_back(start);
+                tmp.push_back(i);
+                res.push_back(tmp);
+                flag=false;
+            }
+        }
+        if(flag){
+            vector<int> tmp;
+            tmp.push_back(start);
+            tmp.push_back(ma);
+            res.push_back(tmp);
+        }
+        return res;
+    }
+};
+
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        if (intervals.size() == 0) {
+            return {};
+        }
+        sort(intervals.begin(), intervals.end());
+        vector<vector<int>> merged;
+        for (int i = 0; i < intervals.size(); ++i) {
+            int L = intervals[i][0], R = intervals[i][1];
+            if (!merged.size() || merged.back()[1] < L) {
+                merged.push_back({L, R});
+            }
+            else {
+                merged.back()[1] = max(merged.back()[1], R);
+            }
+        }
+        return merged;
+    }
+};
