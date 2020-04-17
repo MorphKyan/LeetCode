@@ -1,0 +1,40 @@
+// 超时
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int size=nums.size();
+        if(!size) return false;
+        vector<bool> access(size);
+        access[0]=true;
+        queue<int> q;
+        q.emplace(0);
+
+        while(!q.empty()){
+            int tmp=q.front();q.pop();
+            for(int i=1;i<=nums[tmp]&&tmp+i<size;++i){
+                if(!access[tmp+i]){
+                    access[tmp+i]=true;
+                    q.emplace(tmp+i);
+                }
+            }
+            if(access[size-1]) return true;
+        }
+        return access[size-1];
+    }
+};
+
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int size=nums.size();
+        if(!size) return false;
+        int far=0;
+        int i=0;
+        while(i<=far){
+            far=max(far,i+nums[i]);
+            if(far>=size-1) return true;
+            ++i;
+        }
+        return false;
+    }
+};
