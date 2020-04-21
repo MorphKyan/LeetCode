@@ -18,3 +18,25 @@ public:
         return res;
     }
 };
+
+// 优化空间
+class Solution {
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        int size=nums.size();
+        int odds[size+2];
+        odds[0]=-1;
+        int cnt=0;
+        for(int i=0;i<size;++i){
+            if(nums[i]%2==1){
+                odds[++cnt]=i;
+            }
+        }
+        odds[++cnt]=size;
+        int res=0;
+        for(int i=1;i+k<=cnt;++i){
+            res+=(odds[i]-odds[i-1])*(odds[i+k]-odds[i+k-1]);
+        }
+        return res;
+    }
+};
