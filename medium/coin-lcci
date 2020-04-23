@@ -1,0 +1,16 @@
+// 同518
+class Solution {
+public:
+    int waysToChange(int n) {
+        int coins[]={25,10,5,1};
+        vector<int> dp(n+1,0);
+        dp[0]=1;
+        for(int coin:coins){
+            for(int x=coin;x<n+1;++x){
+                dp[x]+=dp[x-coin];
+                dp[x]%=1000000007;
+            }
+        }
+        return dp[n];
+    }
+};
