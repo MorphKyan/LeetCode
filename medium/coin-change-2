@@ -2,6 +2,7 @@
 class Solution {
 public:
     int change(int amount, vector<int>& coins) {
+        //int dp[amount+1]={0}; //使用int初始化可以，但不能赋初值，然而memset只能给int数组赋值0，还是用vect吧，bool还可以用原始方法
         vector<int> dp(amount+1,0);
         dp[0]=1;
         for(int coin:coins){
