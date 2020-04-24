@@ -1,0 +1,36 @@
+// 逆序对上来就想到排序，然后就是归并排序的应用了
+class Solution {
+public:
+    int reversePairs(vector<int>& nums) {
+        vector<int> tmp(nums.size());
+        return mergeSort(nums,tmp,0,nums.size()-1);
+    }
+
+    int mergeSort(vector<int>& nums,vector<int>& tmp,int l,int r){
+        if(l>=r) return 0;
+        int mid=(l+r)/2;
+        int cnt=mergeSort(nums,tmp,l,mid)+mergeSort(nums,tmp,mid+1,r);
+        int j=mid+1,pos=l,oldl=l;
+        while(l<=mid&&j<=r){
+            if(nums[l]<=nums[j]){
+                tmp[pos]=nums[l];
+                ++l;
+                cnt+=j-mid-1;
+            }
+            else{
+                tmp[pos]=nums[j];
+                ++j;
+            }
+            ++pos;
+        }
+        for(int k=l;k<=mid;++k){
+            tmp[pos++]=nums[k];
+            cnt+=j-mid-1;
+        }
+        for(int k=j;k<=r;++k){
+            tmp[pos++]=nums[k];
+        }
+        copy(tmp.begin()+oldl,tmp.begin()+r+1,nums.begin()+oldl);
+        return cnt;
+    }
+};
