@@ -14,6 +14,7 @@ public:
         //需要临时对象复制参数，对于临时对象的构造，需要调用构造函数
         //比较浪费时间，因此我们采取 const 外加引用传递的方法。
         bool operator < (const Status &rhs) const{ //const外加引用
+        //lhs and rhs stand for Left Hand Side and Right Hand Side in this context.
             return val>rhs.val;
         }
     };
