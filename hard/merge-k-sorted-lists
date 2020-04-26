@@ -1,0 +1,94 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    struct Status{
+        int val;
+        ListNode *ptr;
+        //需要临时对象复制参数，对于临时对象的构造，需要调用构造函数
+        //比较浪费时间，因此我们采取 const 外加引用传递的方法。
+        bool operator < (const Status &rhs) const{ //const外加引用
+            return val>rhs.val;
+        }
+    };
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        priority_queue<Status> q;
+        for(auto node:lists){
+            if(node) q.push({node->val,node});
+        }
+
+        ListNode head,*p=&head;
+        while(!q.empty()){
+            auto tmp=q.top();q.pop();
+            p->next=tmp.ptr;
+            p=p->next;
+            if(tmp.ptr->next) q.push({tmp.ptr->next->val,tmp.ptr->next});
+        }
+        return head.next;
+    }
+};
+
+//优先级队列的用法
+//方法1
+struct tmp1 //运算符重载<
+{
+    int x;
+    tmp1(int a) {x = a;}
+    bool operator<(const tmp1& a) const
+    {
+        return x < a.x; //大顶堆
+    }
+};
+
+//方法2
+struct tmp2 //重写仿函数
+{
+    bool operator() (tmp1 a, tmp1 b) 
+    {
+        return a.x < b.x; //大顶堆
+    }
+};
+
+在 c/c++ 中，为了解决一些频繁调用的小函数大量消耗栈空间（栈内存）的问题，特别的引入了 inline 修饰符，表示为内联函数。
+inline char* dbtest(int a) {
+    return (i % 2 > 0) ? "奇" : "偶";
+} 
+ 
+int main()
+{
+   int i = 0;
+   for (i=1; i < 100; i++) {
+       printf("i:%d    奇偶性:%s /n", i, dbtest(i));    
+   }
+}
+inline 只适合涵数体内代码简单的涵数使用，不能包含复杂的结构控制语句例如 while、switch，并且不能内联函数本身不能是直接递归函数
+inline 函数仅仅是一个对编译器的建议，所以最后能否真正内联，看编译器的意思，它如果认为函数不复杂，能在调用点展开，就会真正内联，并不是说声明了内联就会内联，声明内联只是一个建议而已。
+
+const 修饰类成员函数，其目的是防止成员函数修改被调用对象的值，如果我们不想修改一个调用对象的值，所有的成员函数都应当声明为 const 成员函数。起到保护作用，就是说你要是不改内容不写也没事儿，但是怕你忘了初衷就写上，这样你一改他就给你报错。
+注意：const 关键字不能与 static 关键字同时使用，因为 static 关键字修饰静态成员函数，静态成员函数不含有 this 指针，即不能实例化，const 成员函数必须具体到某一实例。
+如果有个成员函数想修改对象中的某一个成员怎么办？这时我们可以使用 mutable 关键字修饰这个成员，mutable 的意思也是易变的，容易改变的意思，被 mutable 关键字修饰的成员可以处于不断变化中，如下面的例子。
+class Test
+{
+public:
+    Test(int _m,int _t):_cm(_m),_ct(_t){}
+    void Kf()const
+    {
+        ++_cm; // 错误
+        ++_ct; // 正确
+    }
+private:
+    int _cm;
+    mutable int _ct;
+};
+ 
+int main(void)
+{
+    Test t(8,7);
+    return 0;
+}
