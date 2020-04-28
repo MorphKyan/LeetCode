@@ -1,0 +1,20 @@
+// 一道练习位运算的题
+class Solution {
+public:
+    vector<int> singleNumbers(vector<int>& nums) {
+        int ret=0;
+        for(int i:nums){
+            ret^=i; // 异或
+        }
+        int pos=1;
+        while((ret&pos)==0){
+            pos<<=1;
+        }
+        int a=0,b=0;
+        for(int i:nums){
+            if(i&pos) a^=i;
+            else b^=i;
+        }
+        return vector<int>{a,b};
+    }
+};
