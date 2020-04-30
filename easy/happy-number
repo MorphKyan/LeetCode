@@ -1,0 +1,39 @@
+// 用hash表记录已经访问过，判断循环
+class Solution {
+public:
+    bool isHappy(int n) {
+        unordered_set<int> check;
+        while(n!=1&&check.find(n)==check.end()){
+            check.emplace(n);
+            int tmp=0;
+            while(n){
+                tmp+=(n%10)*(n%10);
+                n/=10;
+            }
+            n=tmp;
+        }
+        return n==1;
+    }
+};
+
+// 快慢指针法，遇到判断是否循环状态可用
+class Solution {
+public:
+    int getNext(int n){
+        int tmp=0;
+        while(n){
+            tmp+=(n%10)*(n%10);
+            n/=10;
+        }
+        return tmp;
+    }
+
+    bool isHappy(int n) {
+        int fast=getNext(n),slow=n;
+        while(fast!=1&&slow!=fast){
+            fast=getNext(getNext(fast));
+            slow=getNext(slow);
+        }
+        return fast==1;
+    }
+};
