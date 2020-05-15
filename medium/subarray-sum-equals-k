@@ -1,0 +1,17 @@
+// mp数组保存了前i位和出现的次数，在过程中看有没有当前和-前面多少位和=k的情况。
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        int size=nums.size();
+        int cnt=0,pre=0;
+        unordered_map<int,int> mp;
+        mp[0]=1;
+        for(auto& x:nums){
+            pre+=x;
+            if(mp.find(pre-k)!=mp.end())
+                cnt+=mp[pre-k];
+            ++mp[pre];
+        }
+        return cnt;
+    }
+};
