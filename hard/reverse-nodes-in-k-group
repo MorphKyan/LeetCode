@@ -22,19 +22,14 @@ public:
         now=head;
         pre=nh;
 
-        bool flag=true;
-        while(flag&&now){
+        while(now){
             for(int i=0;i<k;++i){
                 if(now) {
                     change[i]=now;
                     now=now->next;
                 }
-                else {
-                    flag=false;
-                    break;
-                }
+                else return nh;
             }
-            if(!flag) break;
             pre->next=change[k-1];
             pre=change[0];
             pre->next=now;          
