@@ -1,0 +1,82 @@
+struct Node{
+    int key,val;
+    Node* prev;
+    Node* next;
+    Node(): key(0),val(0),prev(nullptr),next(nullptr){}
+    Node(int _key,int _val):key(_key),val(_val),prev(nullptr),next(nullptr){}
+};
+
+class LRUCache {
+    int capacity;
+    unordered_map<int,Node*> key_table;
+    // 头节点尾节点
+    Node* head;
+    Node* tail;
+public:
+    LRUCache(int _capacity) {
+        capacity=_capacity;
+        head=new Node();
+        tail=new Node();
+        head->next=tail;
+        tail->prev=head;
+        key_table.clear();
+    }
+    
+    int get(int key) {
+        if(capacity==0 || !key_table.count(key)) return -1;
+        Node* node=key_table[key];
+        moveToHead(node);
+        return node->val;
+    }
+    
+    void put(int key, int value) {
+        if(capacity==0) return;
+        if(!key_table.count(key)){ // 没有这个key
+            if(key_table.size()==capacity){
+                Node* de=removeTail();
+                key_table.erase(de->key);
+                delete de; // 释放内存
+            }
+            // 插入node
+            Node* node=new Node(key,value);
+            key_table[key]=node;
+            addToHead(node);
+        }
+        else{
+            Node* node=key_table[key];
+            node->val=value;
+            moveToHead(node);
+        }
+    }
+
+    void addToHead(Node* node){
+        node->prev=head;
+        node->next=head->next;
+        head->next->prev=node;
+        head->next=node;
+    }
+
+    void moveToHead(Node* node){
+        node->prev->next=node->next;
+        node->next->prev=node->prev;
+        addToHead(node);
+    }
+
+    void removeNode(Node* node){
+        node->prev->next=node->next;
+        node->next->prev=node->prev;
+    }
+
+    Node* removeTail(){
+        Node* node=tail->prev;
+        removeNode(node);
+        return node;
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
