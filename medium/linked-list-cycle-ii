@@ -1,5 +1,5 @@
 // 快慢指针，听说叫Floyd算法，其实就是先碰到，然后以1的速度两边同时走，就能到环开始的地方
-// 具体证明搜find-the-duplicate-number
+// 具体证明搜find-the-duplicate-number  287
 /**
  * Definition for singly-linked list.
  * struct ListNode {
