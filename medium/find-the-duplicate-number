@@ -1,0 +1,24 @@
+// 快慢指针
+// 第一次相遇后，快慢分别以1的速度行进，这样最终碰到的地方就是圈的起始点，即重复点
+// 到圈前长度L，圈开始到相遇距离C'，整个圈长度C
+// 快走过L+C'+MC，慢走过L+C'+NC，快=2*慢
+// 得出(K-1)C+(C-C')=L，K是任意整数，由M，N合并而来
+// 相遇到圈起点=慢指针从开始到圈起点，注意从这里开始两个指针都是以1的速度行进，也就是都变成了慢指针
+
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int fast=0,slow=0;
+        do{
+            slow=nums[slow];
+            fast=nums[nums[fast]];
+        }
+        while(slow!=fast);
+        slow=0;
+        while(slow!=fast){
+            slow=nums[slow];
+            fast=nums[fast];
+        }
+        return slow;
+    }
+};
