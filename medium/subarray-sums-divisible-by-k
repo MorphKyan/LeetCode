@@ -1,0 +1,36 @@
+// 暴力 超时
+class Solution {
+public:
+    int subarraysDivByK(vector<int>& A, int K) {
+        int size=A.size();
+        int cnt=0;
+        for(int i=0;i<size;++i){
+            int sum=0;
+            for(int j=i;j<size;++j){
+                sum+=A[j];
+                if(sum%K==0) ++cnt;
+            }
+        }
+        return cnt;
+    }
+};
+
+// 通常，涉及连续子数组问题的时候，我们使用前缀和来解决。
+// 与subarray-sum-equals-k相似
+class Solution {
+public:
+    int subarraysDivByK(vector<int>& A, int K) {
+        unordered_map<int,int> map={{0,1}};
+        int cnt=0;
+        int sum=0;
+        for(auto& n:A){
+            sum+=n;
+            int tmp=(sum%K+K)%K; //c++中负数mod为负，数学上应该全为正
+            if(map.count(tmp)){
+                cnt+=map[tmp];
+            }
+            ++map[tmp]; // map没有的key默认value为0
+        }
+        return cnt;
+    }
+};
