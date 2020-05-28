@@ -1,0 +1,43 @@
+// 数字、string两个栈感觉清晰点
+class Solution {
+public:
+    string decodeString(string s) {
+        stack<int> num;
+        stack<string> stk;
+        stk.push("");
+        int size=s.size();
+        for(int i=0;i<size;++i){
+            if(isdigit(s[i])){
+                int n=0;
+                // 连续int合并成数字
+                while(isdigit(s[i])){
+                    n=n*10+s[i]-'0';
+                    ++i;
+                }
+                num.push(n);
+                ++i;
+                string tmp;
+                while(isalpha(s[i])){
+                    tmp+=s[i];
+                    ++i;
+                }
+                --i;
+                stk.push(tmp);
+                continue;
+            }
+            if(s[i]==']'){
+                string elem=stk.top();
+                stk.pop();
+                int times=num.top();
+                num.pop();
+                string tmp;
+                for(int j=0;j<times;++j){
+                    tmp+=elem;
+                }
+                stk.top()+=tmp;
+            }
+            if(isalpha(s[i])) stk.top()+=s[i];
+        }
+        return stk.top();
+    }
+};
