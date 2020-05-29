@@ -1,14 +1,12 @@
+// dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
 class Solution {
 public:
-// dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
     int rob(vector<int>& nums) {
-        int size=(int)nums.size();
-        if(!size) return 0;
+        if(!nums.size()) return 0;
         int dp0=0;
         int dp1=0;
-        for(int i=0;i<size;++i){
+        for(int i=0;i<nums.size();++i){
             int ndp=max(dp0+nums[i],dp1);
-
             dp0=dp1;
             dp1=ndp;
         }
