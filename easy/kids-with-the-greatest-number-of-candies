@@ -1,0 +1,16 @@
+// 六一节快乐 永远做吃糖果的孩子 :P
+class Solution {
+public:
+    vector<bool> kidsWithCandies(vector<int>& candies, int extraCandies) {
+        vector<bool> ans(candies.size());
+        int max_candy=0;
+        for(int i=0;i<candies.size();++i){
+            max_candy=max(candies[i],max_candy);
+        }
+        for(int i=0;i<candies.size();++i){
+            if(candies[i]+extraCandies>=max_candy)
+                ans[i]=true;
+        }
+        return ans;
+    }
+};
