@@ -1,0 +1,14 @@
+// 快速幂 每次使幂次/2
+class Solution {
+public:
+    double myPow(double x, int n) {
+        long m=n;
+        return n>0? helper(x,m):1.0/helper(x,-m);
+    }
+
+    double helper(double x,long n){
+        if(n==0) return 1;
+        double tmp=myPow(x,n/2);
+        return n&1? tmp*tmp*x:tmp*tmp;
+    }
+};
