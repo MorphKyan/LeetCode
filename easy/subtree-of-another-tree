@@ -9,7 +9,7 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-// 最简单的递归 还有更多高级方法有待学习
+// 最简单的递归 还有更多高级方法有待学习 转换成字符串，包含NULL，看是否包含子串；哈希树，左右中三个值哈希加一起，看一不一样
 class Solution {
 public:
     bool isSubtree(TreeNode* s, TreeNode* t) {
