@@ -1,0 +1,65 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// 第一次写的笨办法
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        vector<TreeNode*> stack;
+        vector<TreeNode*> route1;
+        vector<TreeNode*> route2;
+        unordered_map<TreeNode*,bool> checked;
+        checked[root]=true;
+        stack.emplace_back(root);
+        while(!stack.empty()){
+            if(stack.back()->left&&!checked.count(stack.back()->left)){
+                stack.emplace_back(stack.back()->left);
+                checked[stack.back()]=true;
+                continue;
+            }
+            if(stack.back()==p){
+                route1=stack;
+            }
+            if(stack.back()==q){
+                route2=stack;
+            }
+            if(stack.back()->right&&!checked.count(stack.back()->right)){
+                stack.emplace_back(stack.back()->right);
+                checked[stack.back()]=true;
+                continue;
+            }
+            stack.pop_back();
+        }
+        for(int i=route1.size()-1;i>=0;--i){
+            for(int j=route2.size()-1;j>=0;--j){
+                if(route1[i]==route2[j]) return route1[i];
+            }
+        }
+        return root;
+    }
+};
+
+// 后序遍历 左右孩子都为true那就是res了
+class Solution {
+public:
+    TreeNode* ans;
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        dfs(root,p,q);
+        return ans;
+    }
+
+    bool dfs(TreeNode* root,TreeNode* p,TreeNode* q){
+        if(!root) return false;
+        bool l=dfs(root->left,p,q);
+        bool r=dfs(root->right,p,q);
+        if((l&&r)||(root->val==p->val)||(root->val==q->val))
+            ans=root;
+        return l||r||(root->val==p->val)||(root->val==q->val);
+    }
+};
