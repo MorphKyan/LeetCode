@@ -1,4 +1,5 @@
 // 快速幂 每次使幂次/2
+// 递归
 class Solution {
 public:
     double myPow(double x, int n) {
@@ -10,5 +11,20 @@ public:
         if(n==0) return 1;
         double tmp=myPow(x,n/2);
         return n&1? tmp*tmp*x:tmp*tmp;
+    }
+};
+
+// 迭代
+class Solution {
+public:
+    double myPow(double x, int n) {
+        double res=1.0;
+        for(int i=n;i!=0;i/=2){
+            if(i&1){
+                res*=x;
+            }
+            x*=x;
+        }
+        return  n<0? 1/res:res;
     }
 };
