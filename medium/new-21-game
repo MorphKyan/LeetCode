@@ -1,0 +1,22 @@
+class Solution {
+public:
+    double new21Game(int N, int K, int W) {
+        if(K==0) return 1.0;
+        vector<double> dp(N+1); // 从1开始用，直到K+W-1
+        // 边界
+        dp[0]=1;
+        double sum=1.0;
+        // 形成DP数组，每个值保存的是取到这点的概率
+        for(int i=1;i<=N;++i){
+            dp[i]=sum/W; //这里用sum优化掉了一个循环
+            if(i<K) sum+=dp[i];
+            if(i>=W) sum-=dp[i-W];
+        }
+        // 把概率加在一起
+        double ans=0;
+        for(int i=K;i<=N;++i){
+            ans+=dp[i];
+        }
+        return ans;
+    }
+};
