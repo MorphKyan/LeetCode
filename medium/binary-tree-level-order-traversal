@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        if(!root) return ans;
+        vector<int> layer;
+        queue<TreeNode*> q;
+        q.push(root);
+        q.push(NULL);
+        while(!q.empty()){
+            TreeNode* tmp=q.front();
+            q.pop();
+            if(tmp){
+                layer.push_back(tmp->val);
+                if(tmp->left) q.push(tmp->left);
+                if(tmp->right) q.push(tmp->right);
+            }
+            else{
+                ans.push_back(layer);
+                if(!q.empty()) q.push(NULL);
+                layer.clear();
+            }
+        }
+        if(layer.size()) ans.push_back(layer);
+        return ans;
+    }
+};
+
+// 更简单版本 通过记录q大小，保存每层多少个，一次处理
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        if(!root) return ans;
+        queue<TreeNode*> q;
+        q.push(root);
+        while(!q.empty()){
+            vector<int> layer;
+            int size=q.size();
+            for(int i=0;i<size;++i){
+                TreeNode* tmp=q.front();q.pop();
+                layer.push_back(tmp->val);
+                if(tmp->left) q.push(tmp->left);
+                if(tmp->right) q.push(tmp->right);
+            }
+            ans.push_back(layer);
+        }
+        return ans;
+    }
+};
