@@ -1,0 +1,34 @@
+// 两个数组存i左右两侧元素的积
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int size=nums.size();
+        vector<int> productLeft(size+1),productRight(size+1),ans(size);
+        productLeft[0]=1;productRight[size]=1;
+        for(int i=1;i<=size;++i){
+            productLeft[i]=productLeft[i-1]*nums[i-1]; // 从1开始
+            productRight[size-i]=productRight[size-i+1]*nums[size-i]; // 从size-1开始
+        }
+        for(int i=0;i<size;++i){
+            ans[i]=productLeft[i]*productRight[i+1];
+        }
+        return ans;
+    }
+};
+
+// 不算输出数组 空间复杂度为O(1)
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int size=nums.size();
+        vector<int> ans(size,1);
+        int productLeft=1,productRight=1;
+        for(int i=0;i<size;++i){
+            ans[i]*=productLeft;
+            ans[size-i-1]*=productRight;
+            productLeft*=nums[i];
+            productRight*=nums[size-i-1];
+        }
+        return ans;
+    }
+};
