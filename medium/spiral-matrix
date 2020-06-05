@@ -1,0 +1,26 @@
+// 注意这次是加了个方向数组的索引，这个挺方便的，和原来哪种循环的方向数组适用情况不同
+// 这题和shun-shi-zhen-da-yin-ju-zhen-lcof一样
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if(!matrix.size()||!matrix[0].size()) return {};
+        int m=matrix.size(),n=matrix[0].size();
+        int total=m*n;
+        vector<int> ans(total);
+        int move[4][2]={0,1,1,0,0,-1,-1,0};
+        int moveIndex=0;
+        vector<vector<bool>> visit(m,vector<bool>(n));
+        int i=0,j=0;
+        for(int k=0;k<total;++k){
+            visit[i][j]=true;
+            ans[k]=matrix[i][j];
+            if(i+move[moveIndex][0]>=m||i+move[moveIndex][0]<0||j+move[moveIndex][1]<0
+                ||j+move[moveIndex][1]>=n||visit[i+move[moveIndex][0]][j+move[moveIndex][1]]){
+                moveIndex=(moveIndex+1)%4;
+            }
+            i+=move[moveIndex][0];
+            j+=move[moveIndex][1];
+        }
+        return ans;
+    }
+};
