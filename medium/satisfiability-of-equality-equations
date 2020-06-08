@@ -1,0 +1,51 @@
+// 其实先想到的是集合，后面发现这个叫并查集
+class UnionFind{
+private:
+    vector<int> parent;
+
+public:
+    UnionFind(){
+        // resize在改变capacity的同时进行了初始化也就是同时改变了size
+        // ，reserve没有初始化，也就是只改变capacity不改变size
+        parent.resize(26); 
+        iota(parent.begin(),parent.end(),0); // 批量递增赋值vector的元素
+    }
+
+    // 递归查找父
+    int find(int index){
+        if(index==parent[index]){
+            return index;
+        }
+        parent[index]=find(parent[index]);
+        return parent[index];
+    }
+
+    // index1父=index2递归查找父
+    void unite(int index1,int index2){
+        parent[find(index1)]=find(index2);
+    }
+};
+
+class Solution {
+public:
+    bool equationsPossible(vector<string>& equations) {
+        UnionFind uf;
+        for(const string& str:equations){
+            if(str[1]=='='){
+                int index1=str[0]-'a';
+                int index2=str[3]-'a';
+                uf.unite(index1,index2);
+            }
+        }
+        for(const string& str:equations){
+            if(str[1]=='!'){
+                int index1=str[0]-'a';
+                int index2=str[3]-'a';
+                if(uf.find(index1)==uf.find(index2)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
