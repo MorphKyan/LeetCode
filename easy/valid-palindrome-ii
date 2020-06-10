@@ -1,0 +1,24 @@
+// 思路看注释挺清楚的
+class Solution {
+public:
+    bool validPalindrome(string s) {
+        int size=s.size();
+        int l=0,r=size-1;
+        // 先看看到哪里不行了
+        while(s[l]==s[r]&&l<r){
+            ++l;--r;
+        }
+        // l>=r就说明行了
+        if(l>=r) return true;
+        // 再看左边/右边删除一个行不行
+        return helper(s,l+1,r)||helper(s,l,r-1);
+    }
+
+    bool helper(string& s,int l,int r){
+        while(s[l]==s[r]&&l<r){
+            ++l;--r;
+        }
+        if(l>=r) return true;
+        return false;
+    }
+};
