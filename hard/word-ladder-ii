@@ -1,0 +1,83 @@
+// 一个队列保存走过的路，广度遍历，cost判断走过没，wordID、idWord映射，还能优化
+class Solution {
+private:
+    unordered_map<string,int> wordId;
+    vector<string> idWord;
+    vector<vector<int>> edges;
+public:
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        // 给单词编号
+        int id=0;
+        for(const string& word:wordList){
+            if(!wordId.count(word)){
+                wordId[word]=id++;
+                idWord.push_back(word); // ?
+            }
+        }
+        // 如果endWord没在直接返回空
+        if(!wordId.count(endWord)){
+            return {};
+        }
+        // 处理beginWord
+        if(!wordId.count(beginWord)){
+            wordId[beginWord]=id++;
+            idWord.push_back(beginWord);
+        }
+        // 统一分配edge大小，第一层vector为点数量
+        edges.resize(idWord.size());
+        // 搜寻单词之间的连接边
+        for(int i=0;i<idWord.size();++i){
+            for(int j=i+1;j<idWord.size();++j){
+                if(transformCheck(idWord[i],idWord[j])){
+                    edges[i].push_back(j);
+                    edges[j].push_back(i);
+                }
+            }
+        }
+        // 再初始化一些量
+        const int dest=wordId[endWord];
+        vector<vector<string>> res;
+        queue<vector<int>> q;
+        vector<int> cost(id,INT_MAX);
+        q.push(vector<int>{wordId[beginWord]});
+        cost[wordId[beginWord]]=0;
+        // 广度优先遍历
+        while(!q.empty()){
+            vector<int> now=q.front();q.pop();
+            int last=now.back();
+            // 如果最后一个就是dest，转换后推到结果里
+            if(last==dest){
+                vector<string> tmp;
+                for(int idx:now){
+                    tmp.push_back(idWord[idx]);
+                }
+                res.push_back(tmp);
+            }
+            else{
+                // 当前点能连到的点，没有访问过的（靠cost判断）继续入队列
+                for(int i=0;i<edges[last].size();++i){
+                    int to=edges[last][i];
+                    // 判断是否访问过
+                    if(cost[last]+1<=cost[to]){
+                        cost[to]=cost[last]+1;
+                        vector<int> tmp(now);
+                        tmp.push_back(to);
+                        q.push(tmp); // 一条新的路径产生
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    // 对比两个单词是不是就差一个字母
+    bool transformCheck(const string& str1,const string& str2){
+        int diff=0;
+        for(int i=0;i<str1.size()&&diff<2;++i){
+            if(str1[i]!=str2[i]){
+                ++diff;
+            }
+        }
+        return diff==1; // 只有一个字母不同则true
+    }
+};
