@@ -1,0 +1,25 @@
+// 先放到unordered_set里面去重，然后遍历set，如果遍历到x，且x-1也在就跳过，因为此时遍历不可能是最长的
+// 如果x-1不在就循环找这个串的长度，最后求出最大的
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> num_set;
+        for(const int& n:nums){
+            num_set.insert(n);
+        }
+        int ans=0;
+        for(const int& n:num_set){
+            if(!num_set.count(n-1)){
+                int current_num=n;
+                int current_size=1;
+                while(num_set.count(current_num+1)){
+                    ++current_num;
+                    ++current_size;
+                }
+                ans=max(current_size,ans);
+                std::cout<<ans;
+            }
+        }
+        return ans;
+    }
+};
