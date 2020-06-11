@@ -1,0 +1,81 @@
+// 拓扑排序 DFS
+class Solution {
+private:
+    vector<vector<int>> edges;
+    // 0未访问，1正访问，2已访问
+    vector<int> visited;
+    vector<int> ans;
+    // 有环就直接退出了
+    bool circle=false;
+
+public:
+    void dfs(int idx){
+        visited[idx]=1; // 标记正访问
+        for(int i=0;i<edges[idx].size();++i){
+            if(visited[edges[idx][i]]==0){
+                dfs(edges[idx][i]);
+                if(circle) return;
+            }
+            else if(visited[edges[idx][i]]==1){
+                circle=true;
+                return;
+            }
+        }
+        // 访问完成
+        ans.push_back(idx);
+        visited[idx]=2;
+    }
+
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        edges.resize(numCourses);
+        visited.resize(numCourses);
+        for(const auto& origin:prerequisites){
+            edges[origin[1]].push_back(origin[0]);
+        }
+        for(int i=0;i<numCourses;++i){
+            if(visited[i]==0){
+                dfs(i);
+            }
+            if(circle) return {};
+        }
+        // 反序输出，因为末尾节点在开头
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
+
+// 拓扑排序 BFS 易懂一点
+class Solution {
+private:
+    vector<vector<int>> edges;
+    // 节点入度
+    vector<int> indeg;
+    vector<int> ans;
+
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        edges.resize(numCourses);
+        indeg.resize(numCourses);
+        for(const auto& origin:prerequisites){
+            edges[origin[1]].push_back(origin[0]);
+            ++indeg[origin[0]];
+        }
+        queue<int> q;
+        // 0入度节点入队
+        for(int i=0;i<numCourses;++i){
+            if(indeg[i]==0){
+                q.push(i);
+            }
+        }
+        while(!q.empty()){
+            int tmp=q.front();q.pop();
+            ans.push_back(tmp);
+            for(const auto& v:edges[tmp]){
+                --indeg[v];
+                if(indeg[v]==0) q.push(v);
+            }
+        }
+        if(ans.size()!=numCourses) return {};
+        return ans;
+    }
+};
