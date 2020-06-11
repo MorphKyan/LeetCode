@@ -1,0 +1,15 @@
+// 因为分正负，就保存带当前点最小的值和最大的值，得出结果的时候就看最大的值咯
+// 最小的值保存就是为了负负得正的情况，这样没准能出个更大的值
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int maxF=nums[0],minF=nums[0],ans=nums[0];
+        for (int i=1;i<nums.size();++i) {
+            int pmaxF=maxF,pminF=minF;
+            maxF=max(pmaxF*nums[i],max(nums[i],pminF*nums[i]));
+            minF=min(pminF*nums[i],min(nums[i],pmaxF*nums[i]));
+            ans=max(maxF,ans);
+        }
+        return ans;
+    }
+};
