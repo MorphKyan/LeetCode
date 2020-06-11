@@ -1,0 +1,41 @@
+// 暴力法 倒着遍历，next[i-30]记录最近的温度为i的天的编号
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        vector<int> ans(T.size());
+        vector<int> next(71,INT_MAX);
+        for(int i=T.size()-1;i>=0;--i){
+            int min_day=INT_MAX;
+            for(int j=T[i]+1;j<=100;++j){
+                min_day=min(min_day,next[j-30]);
+            }
+            if(min_day!=INT_MAX){
+                ans[i]=min_day-i;
+            }
+            else{
+                ans[i]=0;
+            }
+            next[T[i]-30]=i;
+        }
+        return ans;
+    }
+};
+
+// 单调栈 从底到顶，温度从高到低，T[i]>顶就出栈直到小于等于或空
+// 此时出栈的就已经找到最近超过自己温度的了，此时同时赋值ans
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        int size=T.size();
+        vector<int> ans(size);
+        stack<int> s;
+        for(int i=0;i<size;++i){
+            while(!s.empty()&&T[s.top()]<T[i]){
+                ans[s.top()]=i-s.top();
+                s.pop();
+            }
+            s.push(i);
+        }
+        return ans;
+    }
+};
