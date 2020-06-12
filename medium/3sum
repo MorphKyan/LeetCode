@@ -8,6 +8,7 @@ public:
         for(int i=0;i<size;++i){
             // 这个数和上一个一样就跳过
             if(i>0&&nums[i]==nums[i-1]) continue;
+            // 这里是双指针的关键
             int k=size-1;
             for(int j=i+1;j<size;++j){
                 // 数不能重复
@@ -15,6 +16,8 @@ public:
                 while(k>j&&nums[k]+nums[i]+nums[j]>0){
                     --k;
                 }
+                // 到了j==k那么这轮j也没有循环的必要了
+                // 因为已经不可能和为0了，j和k已经碰到了
                 if(j==k) break;
                 if(nums[k]+nums[i]+nums[j]==0){
                     ans.push_back({nums[i],nums[j],nums[k]});
