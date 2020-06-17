@@ -1,0 +1,15 @@
+// 可以叫动态规划，也可以看成思考题？
+class Solution {
+public:
+    int maxScoreSightseeingPair(vector<int>& A) {
+        int size=A.size();
+        int ans=0;
+        int mx=A[0];
+        for(int j=1;j<size;++j){
+            ans=max(ans,mx+A[j]-j);
+            // 因为是在后面赋值所以不用-1
+            mx=max(mx,A[j]+j);
+        }
+        return ans;
+    }
+};
