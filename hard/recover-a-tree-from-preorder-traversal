@@ -1,0 +1,67 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// 思路在注释中
+class Solution {
+public:
+    TreeNode* recoverFromPreorder(string S) {
+        if(S.size()==0) return new TreeNode();
+        stack<TreeNode*> s;
+        TreeNode* root=new TreeNode(-1);
+        s.push(root);
+        int pre_level=-1;
+        for(int i=0;i<S.size();){
+            // 收集-
+            int level=0;
+            while(S[i]=='-'){
+                ++level;
+                ++i;
+            }
+
+            // 收集数字
+            int value=0;
+            while(isdigit(S[i])){
+                value=value*10+S[i]-'0';
+                ++i;
+            }
+            std::cout<<level<<" "<<value<<" ";
+            TreeNode* t=new TreeNode(value);
+
+            // 层数+1往左子树加
+            if(level==pre_level+1){
+                s.top()->left=t;
+                s.push(t);
+                std::cout<<"type:1"<<std::endl;
+            }
+            // 层数相等往右子树加
+            else if(level==pre_level){
+                s.pop();
+                s.top()->right=t;
+                s.push(t);
+                std::cout<<"父"<<s.top()->val;
+                std::cout<<" type:2"<<std::endl;
+            }
+            // 层数变小出栈
+            else if(level<pre_level){
+                // pop差值+1次
+                for(int j=0;j<pre_level-level+1;++j){
+                    s.pop();
+                }
+                s.top()->right=t;
+                std::cout<<"父"<<s.top()->val;
+                s.push(t);
+                std::cout<<" type:3";
+                std::cout<<" pop"<<pre_level-level+1<<"个"<<std::endl;
+            }
+            // 记录level
+            pre_level=level;
+        }
+        return root->left;
+    }
+};
