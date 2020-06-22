@@ -1,0 +1,66 @@
+class Solution {
+public:
+    int abcount[2];
+
+    bool patternMatching(string pattern, string value) {
+        int psize=pattern.size(),vsize=value.size();
+        // pattern为空看value是不是空
+        if(pattern.empty()) return value.empty();
+        // value为空看pattern是不是全是一个字母
+        if(value.empty()){
+            int i=0;
+            while(i<psize&&pattern[i]==pattern[0]) ++i;
+            return i==psize;
+        }
+        
+        // 统计ab个数
+        abcount[0]=0,abcount[1]=0;
+        /*for(int i=0;i<psize;++i){
+            if(pattern[i]=='a') ++abcount[0];
+            else ++abcount[1];
+        }*/
+        for(char x:pattern) ++abcount[x-'a'];
+
+        if(abcount[0]==0) return canBeSplit(value,abcount[1]);
+        else if(abcount[1]==0) return canBeSplit(value,abcount[0]);
+        
+        // 假设a/b为空的情况
+        if(canBeSplit(value,abcount[0])) return true;
+        if(canBeSplit(value,abcount[1])) return true;
+
+        // 枚举a长度 计算b长度
+        for(int aLen=1;aLen*abcount[0]<=vsize-abcount[1];++aLen){
+            // b的长度是整数
+            if((vsize-aLen*abcount[0])%abcount[1]!=0) continue;
+            int bLen=(vsize-aLen*abcount[0])/abcount[1];
+            string a="",b="";
+            // i遍历pattern，j遍历value
+            int i,j;
+            for(i=0,j=0;i<psize;++i){
+                if(pattern[i]=='a'){
+                    if(a=="") a=value.substr(j,aLen);
+                    else if(value.substr(j,aLen)!=a) break;
+                    j+=aLen;
+                }
+                else if(pattern[i]=='b'){
+                    if(b=="") b=value.substr(j,bLen);
+                    else if(value.substr(j,bLen)!=b) break;
+                    j+=bLen;
+                }
+            }
+            if(i==psize) return true;
+        }
+        return false;
+    }
+
+    // 判断能否分割，并且分割后是否符合要求
+    bool canBeSplit(string& value,int k){
+        int m=value.size();
+        if(m%k!=0) return false;
+        int tmpLen=m/k;
+        for(int i=tmpLen;i<m;i+=tmpLen){
+            if(value.substr(i,tmpLen)!=value.substr(0,tmpLen)) return false;
+        }
+        return true;
+    }
+};
