@@ -1,0 +1,54 @@
+// 不占空间的哈希表就用原来数组的空间
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int n=nums.size();
+
+        // 把所有负数换成n+1，只要换成这个数比n大就行
+        for(int& num:nums){
+            if(num<=0){
+                num=n+1;
+            }
+        }
+
+        // 如果这个数在[1,n]，就把对应位置-1换成负数都换成负数作为标记
+        for(int i=0;i<n;++i){
+            int num=abs(nums[i]); // 绝对值因为他有可能已经被打标记变成负的了；
+            if(num<n){
+                nums[num-1]=-abs(nums[num-1]);
+            }
+        }
+
+        // 找到第一个不是负的 +1就是答案
+        for(int i=0;i<n;++i){
+            if(nums[i]>0){
+                return i+1;
+            }
+        }
+        return n+1;
+    }
+};
+
+// 交换方法
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int n=nums.size();
+        // 把值为x的放到x-1的位置
+        for(int i=0;i<n;++i){
+            // nums[nums[i]-1]!=nums[i]避免两个值一样一直循环换
+            while(nums[i]>0&&nums[i]<=n&&nums[nums[i]-1]!=nums[i]){
+                // 换完以后可能nums[i]还在[1,n]中，就接着换
+                swap(nums[nums[i]-1],nums[i]);
+            }
+        }
+
+        // 找第一个放的位置不对的
+        for(int i=0;i<n;++i){
+            if(nums[i]!=i+1){
+                return i+1;
+            }
+        }
+        return n+1;
+    }
+};
