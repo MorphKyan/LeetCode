@@ -1,0 +1,39 @@
+// 快速排序变成时间复杂度n的快速查找
+class Solution {
+public:
+    int qSelect(vector<int>& a,int l,int r,int idx){
+        int q=randomPartition(a,l,r);
+        // 如果拍好的已经是要求的那位就返回，否则只拍返回的左或右一边就可以了
+        if(q==idx) return a[q];
+        else{
+            return q<idx? qSelect(a,q+1,r,idx):qSelect(a,l,q-1,idx);
+        }
+    }
+
+    int randomPartition(vector<int>& a,int l,int r){
+        // 随机位置
+        int i=rand()%(r-l+1)+l;
+        // 换到最右当哨兵
+        swap(a[i],a[r]);
+        return partition(a,l,r);
+    }
+
+    // 排序，互换位置的过程
+    int partition(vector<int>& a,int l,int r){
+        int x=a[r],i=l-1;
+        // 把小于哨兵都放在最左边
+        for(int j=l;j<r;++j){
+            if(a[j]<=x){
+                swap(a[++i],a[j]);
+            }
+        }
+        // 哨兵入位
+        swap(a[i+1],a[r]);
+        return i+1;
+    }
+
+    int findKthLargest(vector<int>& nums, int k) {
+        srand(time(0)); // srand()用来设置rand()产生随机数时的随机数种子
+        return qSelect(nums,0,nums.size()-1,nums.size()-k);
+    }
+};
