@@ -1,0 +1,21 @@
+// 动态规划 从后往前dp[i][j]表示这个点往后多少个都一样，也就是以这个i j为开头公共最长子数组长度是多少
+class Solution {
+public:
+    int findLength(vector<int>& A, vector<int>& B) {
+        int m=A.size(),n=B.size();
+        vector<vector<int>> dp(m+1,vector<int>(n+1,0));
+        int ans=0;
+        for(int i=m-1;i>=0;--i){
+            for(int j=n-1;j>=0;--j){
+                if(A[i]==B[j]){
+                    dp[i][j]=dp[i+1][j+1]+1;
+                }else{
+                    // 不等于就没有最长子数组了
+                    dp[i][j]=0;
+                }
+                ans=max(ans,dp[i][j]);
+            }
+        }
+        return ans;
+    }
+};
