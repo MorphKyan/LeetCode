@@ -1,0 +1,67 @@
+// 小根堆合并
+class Solution {
+public:
+    struct point{
+        int val,x,y;
+        // 要用emplace就要写下面这句话
+        point(int val,int x,int y):val(val),x(x),y(y){}
+        // 为优先级队列做准备
+        bool operator> (const point& a) const{
+            return this->val>a.val;
+        }
+    };
+
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        // 小根堆 上面operator重载的是>就要写下面完整形势带greater
+        // 重载的是<就只用写一个参数，priority_queue<point> q;
+        priority_queue<point,vector<point>,greater<point>> q;
+        int n=matrix.size();
+        for(int i=0;i<n;++i){
+            q.emplace(matrix[i][0],i,0);
+        }
+        for(int i=0;i<k-1;++i){
+            point now=q.top();
+            q.pop();
+            if(now.y!=n-1){
+                q.emplace(matrix[now.x][now.y+1],now.x,now.y+1);
+            }
+        }
+        return q.top().val;
+    }
+};
+
+// 二分法，找mid这个值在矩阵中的切割线
+class Solution {
+public:
+    // 看这个mid是在要求的k的哪边 二分法
+    bool check(vector<vector<int>>& matrix,int mid,int k,int n){
+        int i=n-1,j=0;
+        int num=0;
+        while(i>=0&&j<n){
+            // 这块是一次加就加一列的
+            if(matrix[i][j]<=mid){
+                num+=i+1;
+                j++;
+            }else{
+                i--;
+            }
+        }
+        return num>=k;
+    }
+
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        int n=matrix.size();
+        // left是最小值在左上角，right是最大值在右下角
+        int left=matrix[0][0];
+        int right=matrix[n-1][n-1];
+        while(left<right){
+            int mid=left+((right-left)>>1);
+            if(check(matrix,mid,k,n)){
+                right=mid;
+            }else{
+                left=mid+1;
+            }
+        }
+        return left;
+    }
+};
