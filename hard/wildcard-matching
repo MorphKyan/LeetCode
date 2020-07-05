@@ -28,3 +28,61 @@ public:
         return dp[m][n];
     }
 };
+
+// 贪心算法，空间时间都更优
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        // 函数
+        auto allStars=[](const string& str,int l,int r){
+            for(int i=l;i<r;++i){
+                if(str[i]!='*') return false;
+            }
+            return true;
+        };
+
+        auto charMatch=[](char u,char v){
+            return u==v||v=='?';
+        };
+
+        while(s.size()&&p.size()&&p.back()!='*'){
+            if(charMatch(s.back(),p.back())){
+                s.pop_back();
+                p.pop_back();
+            }else{
+                return false;
+            }
+        }
+        if(p.empty()){
+            return s.empty();
+        }
+
+        //Idx表示当前位置，Record表示这个串的起始位置，因为不成功要回溯
+        int sIdx=0,pIdx=0;
+        int sRecord=-1,pRecord=-1;
+        while(sIdx<s.size()&&pIdx<p.size()){
+            // p为* p往后走，记录开始位置
+            if(p[pIdx]=='*'){
+                ++pIdx;
+                sRecord=sIdx;
+                pRecord=pIdx;
+            }
+            // 本字符匹配，都往后走
+            else if(charMatch(s[sIdx],p[pIdx])){
+                ++sIdx;
+                ++pIdx;
+            }
+            // 不匹配，初始化s的位置，找下一组s中匹配的字符串
+            else if(sRecord!=-1&&sRecord+1<s.size()){
+                ++sRecord;
+                sIdx=sRecord;
+                pIdx=pRecord;
+            }
+            // 不成功
+            else{
+                return false;
+            }
+        }
+        return allStars(p,pIdx,p.size());
+    }
+};
