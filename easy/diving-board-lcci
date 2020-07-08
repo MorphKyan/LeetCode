@@ -1,0 +1,14 @@
+// 等差数列，注意两种特殊情况就行
+class Solution {
+public:
+    vector<int> divingBoard(int shorter, int longer, int k) {
+        if(k==0) return {};
+        int cha=longer-shorter;
+        if(cha==0) return{shorter*k};
+        vector<int> ans(k+1);
+        for(int i=0;i<=k;++i){
+            ans[i]=shorter*(k-i)+longer*(i);
+        }
+        return ans;
+    }
+};
