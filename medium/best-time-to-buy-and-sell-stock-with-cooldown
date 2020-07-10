@@ -1,4 +1,4 @@
-// 感觉还挺麻烦的dp
+// 感觉还挺麻烦的dp，“一图秒懂解法”这个题解里面的图很清楚
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
