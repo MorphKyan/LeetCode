@@ -1,0 +1,25 @@
+// 把短的放进哈希里面，长的跟哈希表做对比
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        // 短的放进哈希表
+        if(nums1.size()>nums2.size()){
+            return intersect(nums2,nums1);
+        }
+        unordered_map<int,int> h;
+        for(int& num:nums1){
+            ++h[num];
+        }
+        vector<int> intersection;
+        for(int& num:nums2){
+            if(h.count(num)){
+                intersection.push_back(num);
+                --h[num];
+                if(h[num]==0){
+                    h.erase(num);
+                }
+            }
+        }
+        return intersection;
+    }
+};
