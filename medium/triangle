@@ -21,3 +21,25 @@ public:
         return *min_element(dp[size-1].begin(),dp[size-1].end());
     }
 };
+
+// 空间优化
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int size=triangle.size();
+        vector<vector<int>> dp(2,vector<int>(size));
+        dp[0][0]=triangle[0][0];
+        for(int i=1;i<size;++i){
+            // 这里保证数组上下循环使用
+            int cur=i%2;
+            int pre=1-cur;
+            for(int j=0;j<=i;++j){
+                if(j==0) dp[cur][j]=dp[pre][j]+triangle[i][j];
+                else if(j==i) dp[cur][j]=dp[pre][j-1]+triangle[i][j];
+                else dp[cur][j]=min(dp[pre][j-1],dp[pre][j])+triangle[i][j];
+            }
+        }
+
+        return *min_element(dp[(size-1)%2].begin(),dp[(size-1)%2].end());
+    }
+};
