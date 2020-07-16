@@ -1,0 +1,30 @@
+// bfs染色，已经染过且跟要染的不一样的就是false
+// 0表示没有染色，1和2是两种不同颜色
+class Solution {
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        int n=graph.size();
+        vector<int> type(n);
+        for(int i=0;i<n;++i){
+            if(type[i]==0){
+                queue<int> q;
+                q.push(i);
+                while(!q.empty()){
+                    int tmp=q.front();
+                    q.pop();
+                    int next_type=type[tmp]==1? 2:1;
+                    for(int& neighbor:graph[tmp]){
+                        if(type[neighbor]==0){
+                            q.push(neighbor);
+                            type[neighbor]=next_type;
+                        }
+                        else if(type[neighbor]!=next_type){
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+};
