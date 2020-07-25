@@ -1,0 +1,63 @@
+// 动态规划，但这题有贪心+二分查找贼强
+class Solution {
+public:
+    int splitArray(vector<int>& nums, int m) {
+        int n=nums.size();
+        vector<vector<long>> dp(n+1,vector<long>(m+1,INT_MAX));
+        vector<long> sub(n+1,0);
+        for(int i=0;i<n;++i){
+            sub[i+1]=sub[i]+nums[i];
+        }
+        dp[0][0]=0;
+        for(int i=1;i<=n;++i){
+            for(int j=1;j<=min(i,m);++j){
+                for(int k=0;k<i;++k){
+                    // max(dp[k][j-1],sub[i]-sub[k])是分完的序列里面和的最大值
+                    dp[i][j]=min(dp[i][j],max(dp[k][j-1],sub[i]-sub[k]));
+                }
+            }
+        }
+        return dp[n][m];
+    }
+};
+
+// 贪心+二分法，先限定范围，再二分查找最大值为x能不能在m个内分开
+class Solution {
+public:
+    bool check(vector<int>& nums,int x,int m){
+        long long sum=0;
+        int cnt=1;
+        int n=nums.size();
+        for(int i=0;i<n;++i){
+            if(sum+nums[i]>x){
+                ++cnt;
+                sum=nums[i];
+            }
+            else{
+                sum+=nums[i];
+            }
+        }
+        return cnt<=m;
+    }
+
+    int splitArray(vector<int>& nums, int m) {
+        int n=nums.size();
+        long long left=0,right=0;
+        for(int i=0;i<n;++i){
+            // 求上限，是所有数之和
+            right+=nums[i];
+            // 求下限，所有数里面最大的
+            left=max(left,(long long)nums[i]); // 注意类型相同才能比较
+        }
+        while(left<right){
+            long long mid=left+((right-left)>>1);
+            if(check(nums,mid,m)){
+                right=mid;
+            }
+            else{
+                left=mid+1;
+            }
+        }
+        return left;
+    }
+};
