@@ -1,0 +1,50 @@
+// dp+拓扑排序
+class Solution {
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        if(matrix.size()==0||matrix[0].size()==0) return 0;
+        int dirs[4][2]={{-1,0},{1,0},{0,-1},{0,1}};
+        int m=matrix.size(),n=matrix[0].size();
+        vector<vector<int>> outdegrees(m,vector<int>(n));
+        // 计算出度，递增为出
+        for(int i=0;i<m;++i){
+            for(int j=0;j<n;++j){
+                for(int k=0;k<4;++k){
+                    int x=i+dirs[k][0],y=j+dirs[k][1];
+                    if(x>=0&&x<m&&y>=0&&y<n&&matrix[x][y]>matrix[i][j]){
+                        ++outdegrees[i][j];
+                    }
+                }
+            }
+        }
+        queue<pair<int,int>> q;
+        // 0出度入队
+        for(int i=0;i<m;++i){
+            for(int j=0;j<n;++j){
+                if(outdegrees[i][j]==0) q.push({i,j});
+            }
+        }
+        // 统计深度
+        int ans=0;
+        while(!q.empty()){
+            ++ans;
+            int size=q.size();
+            // 遍历一层
+            for(int i=0;i<size;++i){
+                auto cell=q.front();q.pop();
+                int x=cell.first,y=cell.second;
+                for(int k=0;k<4;++k){
+                    int nx=x+dirs[k][0],ny=y+dirs[k][1];
+                    if(nx>=0&&nx<m&&ny>=0&&ny<n&&matrix[nx][ny]<matrix[x][y]){
+                        // 调整相邻的出度，并将出度为0入队，下一层遍历
+                        --outdegrees[nx][ny];
+                        if(outdegrees[nx][ny]==0){
+                            q.push({nx,ny});
+                        }
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
