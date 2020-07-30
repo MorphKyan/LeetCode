@@ -1,4 +1,5 @@
 // 动态规划 后面的仅需要前面的，一直推到需要求的就行
+// 主要是能把整数拆分问题化为动态规划
 class Solution {
 public:
     int integerBreak(int n) {
