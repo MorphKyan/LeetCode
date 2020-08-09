@@ -1,0 +1,143 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+// 中序遍历，存到一个数组里，再判断
+class Solution {
+public:
+    // 中序遍历
+    void inorder(TreeNode* root,vector<int>& nums){
+        if(root==nullptr) return;
+        inorder(root->left,nums);
+        nums.push_back(root->val);
+        inorder(root->right,nums);
+    }
+
+    // 找需要交换的，找左大于右的对，第一个错误是左边的，第二个错误地是右边的
+    pair<int,int> findTwoSwapped(vector<int>& nums){
+        int n=nums.size();
+        int x=-1,y=-1;
+        for(int i=0;i<n-1;++i){
+            if(nums[i+1]<nums[i]){
+                y=nums[i+1];
+                if(x==-1){
+                    x=nums[i];
+                }
+                else break;
+            }
+        }
+        return {x,y};
+    }
+
+    // 恢复位置，直接赋值
+    void recover(TreeNode* r,int count,int x,int y){
+        if(r!=nullptr){
+            if(r->val==x||r->val==y){
+                r->val=r->val==x? y:x;
+                if(--count==0) return;
+            }
+            recover(r->left,count,x,y);
+            recover(r->right,count,x,y);
+        }
+    }
+
+    void recoverTree(TreeNode* root) {
+        vector<int> nums;
+        inorder(root,nums);
+        pair<int,int> swapped=findTwoSwapped(nums);
+        recover(root,2,swapped.first,swapped.second);
+    }
+};
+
+// 中序遍历，遍历过程中判断
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        stack<TreeNode*> stk;
+        TreeNode* x=nullptr;
+        TreeNode* y=nullptr;
+        TreeNode* pre=nullptr;
+
+        while(!stk.empty()||root!=nullptr){
+            // 左子树全进去
+            while(root!=nullptr){
+                stk.push(root);
+                root=root->left;
+            }
+            // 从左下开始
+            root=stk.top();
+            stk.pop();
+            // pre已经记录了以后，看是不是符合左大于右的错误条件
+            if(pre!=nullptr&&root->val<pre->val){
+                y=root;
+                // 第二次其实就没有赋值x了
+                if(x==nullptr){
+                    x=pre;
+                }
+                else break;
+            }
+            pre=root;
+            root=root->right;
+        }
+        swap(x->val,y->val);
+    }
+};
+
+// Morris遍历，遍历过程中判断
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        stack<TreeNode*> stk;
+        TreeNode* x=nullptr;
+        TreeNode* y=nullptr;
+        TreeNode* pre=nullptr;
+        TreeNode* predecessor=nullptr;
+
+        while(root!=nullptr){
+            if(root->left!=nullptr){
+                predecessor=root->left;
+                // 左走一步，然后向右走到底，找前驱
+                while(predecessor->right!=nullptr&&predecessor->right!=root){
+                    predecessor=predecessor->right;
+                }
+                // predecessor右指针指向root，遍历root左子树
+                if(predecessor->right==nullptr){
+                    predecessor->right=root;
+                    root=root->left;
+                }
+                // 说明root的左子树已经遍历完，断开连接，开始遍历root右子树
+                else{
+                    if(pre!=nullptr&&root->val<pre->val){
+                        y=root;
+                        // 第二次其实就没有赋值x了
+                        if(x==nullptr){
+                            x=pre;
+                        }
+                    }
+                    pre=root;
+                    predecessor->right=nullptr;
+                    root=root->right;
+                }
+            }
+            // root没有左孩子直接遍历root右子树
+            else{
+                if(pre!=nullptr&&root->val<pre->val){
+                    y=root;
+                    if(x==nullptr){
+                        x=pre;
+                    }
+                }
+                pre=root;
+                root=root->right;
+            }
+        }
+        swap(x->val,y->val);
+    }
+};
