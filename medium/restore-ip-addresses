@@ -1,0 +1,53 @@
+// 递归查找
+class Solution {
+private:
+    static constexpr int SEG_COUNT=4;
+    vector<string> ans;
+    vector<int> segments;
+public:
+    // 一次遍历到头是操作同一个segments数组，return了以后回溯就是下一种可能的segments数组了，不会冲突
+    void dfs(const string& s,int segId,int segStart){
+        // 四段找完且完整遍历（遍历到了结尾）
+        if(segId==SEG_COUNT){
+            if(segStart==s.size()){
+                string ip;
+                for(int i=0;i<SEG_COUNT;++i){
+                    ip+=to_string(segments[i]);
+                    if(i!=SEG_COUNT-1){
+                        ip+=".";
+                    }
+                }
+                ans.push_back(ip);
+            }
+            return;
+        }
+
+        // 没到4段，就到字符串结尾了
+        if(segStart==s.size()){
+            return;
+        }
+
+        // 这当前数字为0，独立成段，特殊处理
+        if(s[segStart]=='0'){
+            segments[segId]=0;
+            dfs(s,segId+1,segStart+1);
+        }
+
+        // 一般情况
+        int part=0;
+        for(int i=segStart;i<s.size();++i){
+            part=part*10+s[i]-'0';
+            if(part>0&&part<=255){
+                segments[segId]=part;
+                dfs(s,segId+1,i+1);
+            }
+            else break;
+        }
+    }
+
+    vector<string> restoreIpAddresses(string s) {
+        segments.resize(SEG_COUNT);
+        dfs(s,0,0);
+        return ans;
+    }
+};
