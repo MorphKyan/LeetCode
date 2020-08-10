@@ -1,0 +1,22 @@
+// 先把连续的0/1计数，放到一个数组，然后遍历数组
+// 两个相邻值中的最小值为这两组可以出现多少个符合要求的子字符串
+class Solution {
+public:
+    int countBinarySubstrings(string s) {
+        vector<int> count;
+        for(int i=0;i<s.size();){
+            char c=s[i];
+            int cnt=0;
+            while(i<s.size()&&s[i]==c){
+                ++i;
+                ++cnt;
+            }
+            count.emplace_back(cnt);
+        }
+        int ans=0;
+        for(int i=1;i<count.size();++i){
+            ans+=min(count[i-1],count[i]);
+        }
+        return ans;
+    }
+};
