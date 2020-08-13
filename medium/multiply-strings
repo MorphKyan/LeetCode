@@ -1,6 +1,7 @@
+// 一位一位乘法
 class Solution {
 public:
-    string addStrings(string num1, string num2) {
+    string addStrings(string& num1, string& num2) { // 这里不用引用内存消耗大一些
         int m=num1.size()-1,n=num2.size()-1;
         int carry=0;
         string ans="";
@@ -22,6 +23,7 @@ public:
         }
         int m=num1.size(),n=num2.size()-1;
         string ans="0";
+        // 从乘数低位开始往上乘
         while(n>=0){
             string tmp="";
             int mul=num2[n]-'0';
@@ -33,7 +35,9 @@ public:
                 //std::cout<<carry<<" "<<tmp<<" ";
             }
             if(carry!=0) tmp+=carry+'0';
+            // 结果反转
             reverse(tmp.begin(),tmp.end());
+            // 根据乘数是第几位，末尾加0，相当于乘好多次10
             for(int i=0;i<num2.size()-n-1;++i){
                 tmp+='0';
             }
