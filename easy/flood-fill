@@ -1,0 +1,27 @@
+// 这就是一个油漆桶工具
+class Solution {
+public:
+    const int dx[4]={1,0,0,-1};
+    const int dy[4]={0,1,-1,0};
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        // cur代表这种颜色都要改
+        int cur=image[sr][sc];
+        if(cur==newColor) return image;
+        int n=image.size(),m=image[0].size();
+        queue<pair<int,int>> q;
+        q.emplace(sr,sc);
+        image[sr][sc]=newColor;
+        while(!q.empty()){
+            int x=q.front().first,y=q.front().second;
+            q.pop();
+            for(int i=0;i<4;++i){
+                int nx=x+dx[i],ny=y+dy[i];
+                if(nx>=0&&nx<n&&ny>=0&&ny<m&&image[nx][ny]==cur){
+                    q.emplace(nx,ny);
+                    image[nx][ny]=newColor;
+                }
+            }
+        }
+        return image;
+    }
+};
