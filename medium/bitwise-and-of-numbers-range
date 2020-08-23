@@ -1,0 +1,15 @@
+// 数学方法 统计有多少位前缀一样
+class Solution {
+public:
+    int rangeBitwiseAnd(int m, int n) {
+        int shift=0; // 给前缀计数
+        // 把最大和最小一起右移，直到相等，知道前缀多少位是一样的
+        while(m!=n){
+            m>>=1;
+            n>>=1;
+            ++shift;
+        }
+        // 随便把m或n再左移这么多位，相当于前缀没变后面补0
+        return m<<shift;
+    }
+};
