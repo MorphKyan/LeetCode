@@ -1,0 +1,67 @@
+// 一道递归题
+class Solution {
+public:
+    float e=1e-7;
+    int target=24;
+    
+    bool solve(vector<double>& nums){
+        // 只剩一位就跟目标比一下就行了
+        if(nums.size()==1) return fabs(nums[0]-target)<=e;
+        // 列举所有可能，挑选两个数
+        for(int i=0;i<nums.size();++i){
+            for(int j=i+1;j<nums.size();++j){
+                bool status=false;
+                // 把剩下的数保存到数组
+                vector<double> tmp;
+                for(int k=0;k<nums.size();++k){
+                    if(k!=i&&k!=j){
+                        tmp.emplace_back(nums[k]);
+                    }
+                }
+                // 分别做4种操作，其实有6种情况，+和*有交换律
+                tmp.emplace_back(nums[i]+nums[j]);
+                status=solve(tmp);
+                if(status) return true;
+                tmp.pop_back();
+
+                tmp.emplace_back(nums[i]-nums[j]);
+                status=solve(tmp);
+                if(status) return true;
+                tmp.pop_back();
+
+                tmp.emplace_back(nums[i]*nums[j]);
+                status=solve(tmp);
+                if(status) return true;
+                tmp.pop_back();
+
+                if(nums[j]!=0){
+                    tmp.emplace_back(nums[i]/nums[j]);
+                    status=solve(tmp);
+                    if(status) return true;
+                    tmp.pop_back();
+                }
+
+                tmp.emplace_back(nums[j]-nums[i]);
+                status=solve(tmp);
+                if(status) return true;
+                tmp.pop_back();
+
+                if(nums[i]!=0){
+                    tmp.emplace_back(nums[j]/nums[i]);
+                    status=solve(tmp);
+                    if(status) return true;
+                    tmp.pop_back();
+                }
+            }
+        }
+        return false;
+    }
+
+    bool judgePoint24(vector<int>& nums) {
+        vector<double> dnums;
+        for(int num:nums){
+            dnums.emplace_back((double)num);
+        }
+        return solve(dnums);
+    }
+};
