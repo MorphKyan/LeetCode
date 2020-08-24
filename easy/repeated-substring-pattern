@@ -1,0 +1,21 @@
+class Solution {
+public:
+    bool repeatedSubstringPattern(string s) {
+        int n=s.size();
+        // 只用匹配到一半
+        for(int i=1;i<=n/2;++i){
+            if(n%i==0){ //保证能整除分开
+                bool check=true;
+                // 以i为循环的话，应该s[j]=s[j-i]
+                for(int j=i;j<n;++j){
+                    if(s[j]!=s[j-i]){
+                        check=false;
+                        break;
+                    }
+                }
+                if(check) return true;
+            }
+        }
+        return false;
+    }
+};
