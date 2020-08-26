@@ -1,0 +1,36 @@
+// 判重+dfs
+class Solution {
+public:
+    // 判重 看从目前位置往后有没有跟当前处理一样的，有一样的说明已经考虑进去了
+    bool is_first(const vector<int>& num,int last,int pos){
+        for(int i=last+1;i<pos;++i){
+            if(num[i]==num[pos]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void dfs(const vector<int>&nums,int last,int pos,vector<int>&stack, vector<vector<int>>& ans){
+        // 到结尾了
+        std::cout<<last<<" ";
+        if(nums.size()==pos) return;
+        if((stack.empty()||nums[pos]>=stack.back())&&is_first(nums,last,pos)){
+            stack.push_back(nums[pos]);
+            // >2个字符，是子串了，加入结果集
+            if(stack.size()>=2){
+                ans.push_back(stack);
+            }
+            dfs(nums,pos,pos+1,stack,ans);
+            stack.pop_back(); // 回溯
+        }
+        dfs(nums,last,pos+1,stack,ans); // 从下一位开始了
+    }
+
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> stack;
+        dfs(nums,-1,0,stack,ans);
+        return ans;
+    }
+};
