@@ -1,0 +1,24 @@
+// 欧拉路径
+class Solution {
+public:
+    unordered_map<string,priority_queue<string,vector<string>,std::greater<string>>> vec;
+    vector<string> stk;
+
+    void dfs(const string& cur){
+        while(vec.count(cur)&&vec[cur].size()>0){ // 判断是否还有继续往下走的边
+            string tmp=vec[cur].top();
+            vec[cur].pop(); // 去掉这条边
+            dfs(move(tmp));
+        }
+        stk.emplace_back(cur); // 这个点没有边了就入队
+    }
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        for(auto& it:tickets){
+            vec[it[0]].emplace(it[1]); // 放到优先队列中方便查找
+        }
+        dfs("JFK");
+
+        reverse(stk.begin(),stk.end()); // 最后访问的在最开始入栈了，逆序输出
+        return stk;
+    }
+};
