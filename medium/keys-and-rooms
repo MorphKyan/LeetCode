@@ -1,3 +1,4 @@
+// 简单dfs
 class Solution {
 public:
     vector<int> vis;
