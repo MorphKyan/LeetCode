@@ -1,0 +1,25 @@
+// 先判断哪些是一个词，然后反转
+class Solution {
+public:
+    string reverseWords(string s) {
+        string ans;
+        int m=s.size();
+        int i=0;
+        while(i<m){
+            int start=i;
+            // 找好这哪几个字是一个词
+            while(i<m&&s[i]!=' '){
+                ++i;
+            }
+            // 逆序压入答案数组
+            for(int p=start;p<i;++p){
+                ans.push_back(s[start+i-1-p]);
+            }
+            while(i<m&&s[i]==' '){
+                ++i;
+                ans.push_back(' ');
+            }
+        }
+        return ans;
+    }
+};
