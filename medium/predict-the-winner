@@ -1,0 +1,16 @@
+// 递归 算的是分差
+class Solution {
+public:
+    int helper(vector<int>& nums,int left,int right,int turn){
+        if(left==right) return nums[left]*turn;
+        // 分别拿左右计算分数
+        int tmp1=nums[left]*turn+helper(nums,left+1,right,-turn);
+        int tmp2=nums[right]*turn+helper(nums,left,right-1,-turn);
+        if(turn==1) return max(tmp1,tmp2);
+        return min(tmp1,tmp2);
+    }
+
+    bool PredictTheWinner(vector<int>& nums) {
+        return helper(nums,0,nums.size()-1,1)>=0;
+    }
+};
