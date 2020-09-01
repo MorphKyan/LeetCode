@@ -15,3 +15,11 @@ public:
         return dp[0][n-1]>0;
     }
 };
+
+// 根据数学还可以直接return true
+class Solution {
+public:
+    bool stoneGame(vector<int>& piles) {
+        return true;
+    }
+};
