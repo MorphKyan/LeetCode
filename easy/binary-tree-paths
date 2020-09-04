@@ -1,0 +1,29 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// 简单dfs
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> ans;
+        if(root==NULL) return ans;
+        dfs(root,"",ans);
+        return ans;
+    }
+
+    void dfs(TreeNode* root,string path,vector<string>& ans){
+        if(root->left==NULL&&root->right==NULL){
+            path+=to_string(root->val);
+            ans.emplace_back(path);
+        }
+        path+=to_string(root->val)+"->";
+        if(root->left!=NULL) dfs(root->left,path,ans);
+        if(root->right!=NULL) dfs(root->right,path,ans);
+    }
+};
