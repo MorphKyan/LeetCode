@@ -1,0 +1,28 @@
+// 递归+剪枝
+class Solution {
+public:
+    vector<int> tmp;
+    vector<vector<int>> ans;
+
+    void dfs(int cur,int n,int k){
+        // 剪枝 后面的数字都选上都达不到k的长度，就不往下进行了
+        if(tmp.size()+(n-cur+1)<k) return;
+        // 记录答案
+        if(tmp.size()==k){
+            ans.emplace_back(tmp);
+            return;
+        }
+        // 这个数字被选进结果里
+        tmp.emplace_back(cur);
+        dfs(cur+1,n,k);
+        // 回溯
+        tmp.pop_back();
+        // 这个数字不选进结果里
+        dfs(cur+1,n,k);
+    }
+
+    vector<vector<int>> combine(int n, int k) {
+        dfs(1,n,k);
+        return ans;
+    }
+};
