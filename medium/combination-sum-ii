@@ -1,0 +1,27 @@
+// 排序 回溯
+class Solution {
+public:
+    void dfs(vector<int>& candidates,vector<vector<int>>& ans,vector<int>& set,int idx,int target){
+        if(target==0){
+            ans.emplace_back(set);
+            return;
+        }
+        if(idx==candidates.size()) return;
+        if(target-candidates[idx]>=0){
+            set.emplace_back(candidates[idx]);
+            dfs(candidates,ans,set,idx+1,target-candidates[idx]);
+            set.pop_back();
+        }
+        while(idx+1<candidates.size()&&candidates[idx+1]==candidates[idx]){
+            idx++;
+        }
+        dfs(candidates,ans,set,idx+1,target);
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        vector<vector<int>> ans;
+        vector<int> set;
+        dfs(candidates,ans,set,0,target);
+        return ans;
+    }
+};
