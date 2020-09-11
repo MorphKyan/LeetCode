@@ -1,0 +1,24 @@
+// 递归 回溯
+class Solution {
+public:
+    vector<int> temp;
+    vector<vector<int>> ans;
+
+    void dfs(int cur,int n,int k,int sum) {
+        // 数不够用或已经超出
+        if(temp.size()+(n-cur+1)<k||temp.size()>k) return;
+        if(temp.size()==k&&accumulate(temp.begin(),temp.end(),0)==sum){ // 最后一个参数是累加初始值，要和前面迭代类型相同
+            ans.emplace_back(temp);
+            return;
+        }
+        temp.emplace_back(cur);
+        dfs(cur+1,n,k,sum);
+        temp.pop_back();
+        dfs(cur+1,n,k,sum);
+    }
+
+    vector<vector<int>> combinationSum3(int k, int n) {
+        dfs(1, 9, k, n);
+        return ans;
+    }
+};
