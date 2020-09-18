@@ -13,6 +13,8 @@ public:
             return;
         }
         for(int i=start;i<nums.size();++i){
+            // 这里使用了一个技巧，省去了vis数组和temp临时数组
+            // 把nums假想为左右两边，start指示了分界线，每次只从右边遍历找数字，再和start位置的数字交换
             swap(nums[start],nums[i]);
             helper(nums,start+1,res);
             swap(nums[start],nums[i]);
