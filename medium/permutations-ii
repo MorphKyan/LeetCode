@@ -1,0 +1,28 @@
+// 标准回溯+剪枝 
+class Solution {
+    vector<bool> vis;
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vis.resize(nums.size());
+        sort(nums.begin(),nums.end());
+        vector<int> tmp;
+        helper(nums,ans,tmp);
+        return ans;
+    }
+
+    void helper(vector<int>& nums,vector<vector<int>>& ans,vector<int>& tmp){
+        if(tmp.size()==nums.size()){
+            ans.emplace_back(tmp);
+            return;
+        }
+        for(int i=0;i<nums.size();++i){
+            if(vis[i]||(i>0&&nums[i]==nums[i-1]&&!vis[i-1])) continue;
+            tmp.emplace_back(nums[i]);
+            vis[i]=true;
+            helper(nums,ans,tmp);
+            vis[i]=false;
+            tmp.pop_back();
+        }
+    }
+};
