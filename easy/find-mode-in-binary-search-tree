@@ -1,0 +1,66 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// Morris中序遍历，借鉴线索树思想
+// update更新结果
+class Solution {
+public:
+    int now,maxCount,count;
+    vector<int> ans;
+    void update(int num){
+        if(num==now){
+            ++count;
+        }
+        else{
+            count=1;
+            now=num;
+        }
+        if(count==maxCount){
+            ans.emplace_back(now);
+        }
+        else if(count>maxCount){
+            maxCount=count;
+            ans.clear();
+            ans.emplace_back(now);
+        }
+    }
+
+    vector<int> findMode(TreeNode* root) {
+        TreeNode* cur=root;
+        maxCount=0;
+        if(cur==NULL) return{};
+        while(cur){
+            if(cur->left==NULL){
+                //vis
+                update(cur->val);
+                cur=cur->right;
+            }
+            else{
+                // 找左孩子的最右节点
+                TreeNode* tmp=cur->left;
+                while(tmp->right!=NULL&&tmp->right!=cur){
+                    tmp=tmp->right;
+                }
+
+                // 作为当前cur的前驱，为右子树赋值
+                if(tmp->right==NULL){
+                    tmp->right=cur;
+                    cur=cur->left;
+                }
+                // 已经赋值过，恢复原本形状（注意：此时那个节点已经访问过了，才会回到现在这个位置）
+                else{
+                    tmp->right=NULL;
+                    update(cur->val);
+                    cur=cur->right;
+                }
+            }
+        }
+        return ans;
+    }
+};
