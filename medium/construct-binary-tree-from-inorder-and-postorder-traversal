@@ -1,0 +1,34 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// hash表 递归 先构造右子树
+class Solution {
+    int post_idx;
+    unordered_map<int,int> map;
+public:
+    TreeNode* helper(int left,int right,vector<int>& inorder,vector<int>& postorder){
+        if(left>right) return NULL;
+        int val=postorder[post_idx];
+        TreeNode* root=new TreeNode(val);
+        int index=map[val];
+        --post_idx;
+        root->right=helper(index+1,right,inorder,postorder);
+        root->left=helper(left,index-1,inorder,postorder);
+        return root;
+    }
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        post_idx=postorder.size()-1;
+        //建立hash
+        int i=0;
+        for(int val:inorder){
+            map[val]=i++;
+        }
+        return helper(0,inorder.size()-1,inorder,postorder);
+    }
+};
