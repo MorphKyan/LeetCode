@@ -1,0 +1,65 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// 深度优先 注意是要到叶子节点才算，且可能有负数不用剪枝
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int>tmp;
+    void dfs(TreeNode* root,int sumT,int sum){
+        sumT+=root->val;
+        tmp.emplace_back(root->val);
+        if(root->left==NULL&&root->right==NULL){
+            if(sumT==sum){
+                ans.emplace_back(tmp);
+            }
+            tmp.pop_back();
+            return;
+        }
+        if(root->left){
+            dfs(root->left,sumT,sum);
+        }
+        if(root->right){
+            dfs(root->right,sumT,sum);
+        }
+        tmp.pop_back();
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        if(root==NULL) return ans;
+        dfs(root,0,sum);
+        return ans;
+    }
+};
+
+// 这个看着更简洁
+class Solution {
+public:
+    vector<vector<int>> ret;
+    vector<int> path;
+
+    void dfs(TreeNode* root, int sum) {
+        if (root == nullptr) {
+            return;
+        }
+        path.emplace_back(root->val);
+        sum -= root->val;
+        if (root->left == nullptr && root->right == nullptr && sum == 0) {
+            ret.emplace_back(path);
+        }
+        dfs(root->left, sum);
+        dfs(root->right, sum);
+        path.pop_back();
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        dfs(root, sum);
+        return ret;
+    }
+};
