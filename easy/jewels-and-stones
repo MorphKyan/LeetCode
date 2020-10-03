@@ -1,0 +1,18 @@
+// hash集合
+class Solution {
+public:
+    int numJewelsInStones(string J, string S) {
+        int ans=0;
+        unordered_set<char> set;
+        for(int i=0;i<J.size();++i){
+            set.insert(J[i]);
+        }
+        for(int i=0;i<S.size();++i){
+            // 仅仅想找到有没有就用count，想找到这个值并用这个值就用find
+            // 因为unordered不允许重复，所以时间复杂度都是O(1)
+            // set/map的话，count最坏可以达到O(N)
+            if(set.find(S[i])!=set.end()) ++ans;
+        }
+        return ans;
+    }
+};
