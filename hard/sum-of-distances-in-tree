@@ -1,0 +1,42 @@
+// 这道题巧妙地将目标拆分为两部分：子树内的节点与 root 的距离和；子树外的节点与 root 的距离和
+class Solution {
+//private:
+public:
+    vector<vector<int>> graph; //邻接表
+    vector<int> distSum;
+    vector<int> nodeNum; //子树数
+    // 第一次dfs从底向上
+    void postOrder(int root,int parent){
+        vector<int> neighbors=graph[root];
+        for(int& neighbor:neighbors){
+            if(neighbor==parent) continue; // 如果邻接节点是父节点，跳过
+            postOrder(neighbor,root);
+            nodeNum[root]+=nodeNum[neighbor];
+            distSum[root]+=distSum[neighbor]+nodeNum[neighbor];
+        }
+    }
+
+    void preOrder(int root,int parent){
+        vector<int> neighbors=graph[root];
+        for(int& neighbor:neighbors){
+            if(neighbor==parent) continue;
+            distSum[neighbor]=distSum[root]-nodeNum[neighbor]+(graph.size()-nodeNum[neighbor]);
+            preOrder(neighbor,root);
+        }
+    }
+
+    vector<int> sumOfDistancesInTree(int N, vector<vector<int>>& edges) {
+        distSum.resize(N,0);
+        nodeNum.resize(N,1);
+        graph.resize(N,{});
+        // 建立邻接表
+        for(auto& e:edges){
+            int u = e[0], v = e[1];
+            graph[u].emplace_back(v);
+            graph[v].emplace_back(u);
+        }
+        postOrder(0,-1);
+        preOrder(0,-1);
+        return distSum;
+    }
+};
