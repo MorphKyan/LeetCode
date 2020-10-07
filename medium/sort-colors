@@ -1,0 +1,19 @@
+// 双指针 0放最前面 2放最后面 +一个修正
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int p0=0,p2=nums.size()-1;
+        // 超过p2就相当于全完事儿了
+        for(int i=0;i<=p2;++i){
+            // 不断交换p2直到i位置不是2
+            while(i<=p2&&nums[i]==2){
+                swap(nums[i],nums[p2]);
+                --p2;
+            }
+            if(nums[i]==0){
+                swap(nums[i],nums[p0]);
+                ++p0;
+            }
+        }
+    }
+};
