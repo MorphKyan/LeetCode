@@ -1,0 +1,28 @@
+// 循环又循环
+class Solution {
+public:
+    vector<string> commonChars(vector<string>& A) {
+        vector<int> c(26,INT_MAX);
+        vector<string> ans;
+        for(string& str:A){
+            vector<int> tmp(26);
+            // fill(tmp.begin(), tmp.end(), 0);
+            for(char& s:str){
+                ++tmp[s-'a'];
+            }
+            for(int i=0;i<26;++i){
+                c[i]=min(c[i],tmp[i]);
+            }
+        }
+        for(int i=0;i<26;++i){
+            for(int j=0;j<c[i];++j){
+                if(c[i]!=0&&c[i]!=INT_MAX){
+                    // 调用string构造函数，相当于string(1,i+'a')
+                    // string(size_type n,char c)是创建一个包含n个字符的string对象，其中每个字符都是c。
+                    ans.emplace_back(1,'a'+i);
+                }
+            }
+        }
+        return ans;
+    }
+};
