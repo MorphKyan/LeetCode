@@ -1,0 +1,64 @@
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
+
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+*/
+// 层序遍历 以NULL结尾
+class Solution {
+public:
+    Node* connect(Node* root) {
+        queue<Node*> q;
+        q.push(root);
+        q.push(NULL);
+        while(q.front()!=NULL){
+            int size=q.size();
+            for(int i=0;i<size;++i){
+                Node* tmp=q.front();
+                q.pop();
+                if(tmp==NULL) break;
+                tmp->next=q.front();
+                if(tmp->left) q.push(tmp->left);
+                if(tmp->right) q.push(tmp->right);
+            }
+            q.push(NULL);
+        }
+        return root;
+    }
+};
+
+// 利用完全二叉树性质 优化空间O(1)
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if(root==NULL) return root;
+        Node* first=root;
+        while(first->left!=NULL){
+            // 遍历一层 遍历这一层的时候，这一层的next指针是赋值好的了
+            Node* tmp=first;
+            while(tmp!=NULL){
+                // 赋值left
+                tmp->left->next=tmp->right;
+                // 赋值right
+                if(tmp->next!=NULL){
+                    tmp->right->next=tmp->next->left;
+                }
+                tmp=tmp->next;
+            }
+            // 下一层开头
+            first=first->left;
+        }
+        return root;
+    }
+};
