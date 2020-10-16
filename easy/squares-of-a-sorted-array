@@ -1,0 +1,21 @@
+// 巧妙地从两边开始往里弄，先申请好空间，倒叙插入
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& A) {
+        int n=A.size();
+        vector<int> ans(n);
+        int l=0,r=n-1;
+        for(int i=0;i<n;++i){
+            int tmp1=A[l]*A[l],tmp2=A[r]*A[r];
+            if(tmp1>tmp2){
+                ans[n-1-i]=tmp1;
+                ++l;
+            }
+            else{
+                ans[n-1-i]=tmp2;
+                --r;
+            }
+        }
+        return ans;
+    }
+};
