@@ -1,0 +1,41 @@
+// 基于集合的回溯
+class Solution {
+public:
+    int ans;
+    int totalNQueens(int n) {
+        ans=0;
+        vector<int> queens(n,-1);
+        unordered_set<int> columns; // 列有没有q
+        unordered_set<int> diagonals1; // 右下斜 行标-列标
+        unordered_set<int> diagonals2; // 左斜下 行标+列标
+        backtrack(queens,n,0,columns,diagonals1,diagonals2);
+        return ans;
+    }
+
+    void backtrack(vector<int>& queens,int n,int row,unordered_set<int>& columns,unordered_set<int>& diagonals1,unordered_set<int>& diagonals2){
+        //std::cout<<row<<" ";
+        // 一个棋盘弄完了 加入结果集
+        if(row==n){
+            ++ans;
+        }else{
+            for(int i=0;i<n;++i){ // 遍历的是列 i是列标
+                if(columns.find(i)!=columns.end()) continue;
+                int diagonal1=row-i;
+                if(diagonals1.find(diagonal1)!=diagonals1.end()) continue;
+                int diagonal2=row+i;
+                if(diagonals2.find(diagonal2)!=diagonals2.end()) continue;
+                queens[row]=i;
+                columns.insert(i);
+                diagonals1.insert(diagonal1);
+                diagonals2.insert(diagonal2);
+                // 递归下一行
+                backtrack(queens,n,row+1,columns,diagonals1,diagonals2);
+                // 回溯
+                queens[row]=-1;
+                columns.erase(i);
+                diagonals1.erase(diagonal1);
+                diagonals2.erase(diagonal2);
+            }
+        }
+    }
+};
