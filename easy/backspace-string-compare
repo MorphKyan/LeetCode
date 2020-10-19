@@ -1,0 +1,71 @@
+// 模拟一下字符串，注意空的时候退格就不要pop_back()了
+class Solution {
+public:
+    bool backspaceCompare(string S, string T) {
+        vector<char> a,b;
+        for(char& c:S){
+            if(c=='#'){
+                if(!a.empty()) a.pop_back();
+                continue;
+            }
+            a.emplace_back(c);
+        }
+        for(char& c:T){
+            if(c=='#'){
+                if(!b.empty()) b.pop_back();
+                continue;
+            }
+            b.emplace_back(c);
+        }
+        if(a.size()!=b.size()) return false;
+        for(int i=0;i<a.size();++i){
+            if(a[i]!=b[i]) return false;
+        }
+        return true;
+    }
+};
+
+// 双指针 优化空间
+class Solution {
+public:
+    bool backspaceCompare(string S, string T) {
+        int m=S.size()-1,n=T.size()-1;
+        int skip1=0,skip2=0;
+        while(m>=0||n>=0){
+            while(m>=0){
+                if(S[m]=='#'){
+                    ++skip1;
+                    --m;
+                }
+                else if(skip1!=0){
+                    --skip1;
+                    --m;
+                }
+                else{
+                    break;
+                }
+            }
+            while(n>=0){
+                if(T[n]=='#'){
+                    ++skip2;
+                    --n;
+                }
+                else if(skip2!=0){
+                    --skip2;
+                    --n;
+                }
+                else{
+                    break;
+                }
+            }
+            if(m>=0&&n>=0){
+                if(S[m]!=T[n]) return false;
+            }
+            else if(m>=0||n>=0){ // 此时说明有一个字符串肯定比另一个字符串多字母，因为还没有到头
+                return false;
+            }
+            --m;--n;
+        }
+        return true;
+    }
+};
