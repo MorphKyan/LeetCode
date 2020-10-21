@@ -1,0 +1,20 @@
+// 模拟，每次判断一个字符，这样逻辑简单些，原本我想直接一次跳过所有重复，减少判断的数量，程序看起来就乱很多
+class Solution {
+public:
+    bool isLongPressedName(string name, string typed) {
+        int i=0,j=0;
+        while(j<typed.size()){
+            if(name[i]==typed[j]){
+                ++i;
+                ++j;
+            }
+            else if(j>0&&typed[j]==typed[j-1]){
+                j++;
+            }
+            else{
+                return false;
+            }
+        }
+        return i==name.size();
+    }
+};
