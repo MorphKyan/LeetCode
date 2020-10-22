@@ -1,0 +1,21 @@
+// 贪心
+class Solution {
+public:
+    vector<int> partitionLabels(string S) {
+        vector<int> ans;
+        int endc[26]={0};
+        for(int i=0;i<S.size();++i){
+            endc[S[i]-'a']=i;
+        }
+        int start=0,end=0;
+        while(end<S.size()){
+            for(int i=start;i<=end;++i){
+                end=max(end,endc[S[i]-'a']);
+            }
+            ans.emplace_back(end-start+1);
+            ++end;
+            start=end;
+        }
+        return ans;
+    }
+};
