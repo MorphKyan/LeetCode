@@ -1,0 +1,15 @@
+// 两次hash 一遍统计次数，一遍把出现多少次记录一下
+class Solution {
+public:
+    bool uniqueOccurrences(vector<int>& arr) {
+        unordered_map<int,int> times;
+        for(int& num:arr){
+            ++times[num];
+        }
+        unordered_set<int> dif;
+        for(auto& x:times){
+            dif.insert(x.second);
+        }
+        return dif.size()==times.size();
+    }
+};
