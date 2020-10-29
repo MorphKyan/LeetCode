@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// dfs
+class Solution {
+public:
+    int sum;
+    int sumNumbers(TreeNode* root) {
+        if(!root) return 0;
+        sum=0;
+        int tmp=0;
+        dfs(root,tmp);
+        return sum;
+    }
+
+    void dfs(TreeNode* root,int tmp){
+        if(root->left){
+            dfs(root->left,tmp*10+root->val);
+        }
+        if(root->right){
+            dfs(root->right,tmp*10+root->val);
+        }
+        if(!root->left&&!root->right){
+            sum+=tmp*10+root->val;
+        }
+    }
+};
+
+// 把root==NULL判断写一行，也不用额外的sum了
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        return dfs(root,0);
+    }
+
+    int dfs(TreeNode* root,int sum){
+        if(!root) return 0;
+        sum=sum*10+root->val;
+        if(!root->left&&!root->right){
+            return sum;
+        }
+        else{
+            return dfs(root->left,sum)+dfs(root->right,sum); // 在这里递归回去的时候所有子树就都加在一起了
+        }
+    }
+};
