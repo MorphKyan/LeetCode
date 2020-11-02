@@ -1,0 +1,21 @@
+// 就俩set 这样时间复杂度最低了吧
+// 需求空间就排序+双指针
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set<int> set1,set2;
+        for(int& num:nums1){
+            set1.insert(num);
+        }
+        for(int& num:nums2){
+            set2.insert(num);
+        }
+        vector<int> ans;
+        for(auto& it:set1){
+            if(set2.count(it)){
+                ans.emplace_back(it);
+            }
+        }
+        return ans;
+    }
+};
