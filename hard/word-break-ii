@@ -1,0 +1,32 @@
+// 记忆化
+class Solution {
+private:
+    unordered_map<int,vector<string>> ans;
+    unordered_set<string> wordSet;
+
+public:
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        wordSet=unordered_set(wordDict.begin(),wordDict.end());
+        backtrack(s,0);
+        return ans[0];
+    }
+
+    void backtrack(const string& s,int index){
+        if(!ans.count(index)){ // 记忆化
+            if(index==s.size()){ // 到末尾
+                ans[index]={""};
+                return;
+            }
+            ans[index]={};
+            for(int i=index+1;i<=s.size();++i){
+                string word=s.substr(index,i-index); // 切出子串
+                if(wordSet.count(word)){ // 看看是不是单词
+                    backtrack(s,i); // 递归剩余子串
+                    for(const string& succ:ans[i]){ // 遍历所有结果
+                        ans[index].push_back(succ.empty()? word:word+" "+succ); // 拼接
+                    }
+                }
+            }
+        }
+    }
+};
