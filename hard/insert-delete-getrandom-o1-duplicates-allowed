@@ -1,0 +1,49 @@
+// 主要技巧就是vector先交换位置（把元素值复制一下相当于换位置），再从末尾删除，这样时间就是O(1)了
+class RandomizedCollection {
+public:
+    /** Initialize your data structure here. */
+    unordered_map<int,unordered_set<int>> map;
+    vector<int> nums;
+    RandomizedCollection() {
+
+    }
+    
+    /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+    bool insert(int val) {
+        map[val].insert(nums.size());
+        nums.emplace_back(val);
+        return map[val].size()==1;
+    }
+    
+    /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+    bool remove(int val) {
+        if(map.count(val)==0){
+            return false;
+        }
+        int i=*(map[val].begin());
+        nums[i]=nums.back();
+        map[val].erase(i);
+        map[nums[i]].erase(nums.size()-1);
+        if(i<nums.size()-1){ // 防止删除的是最后一个的时候发生错误，错误就是又添加回来了！
+            map[nums[i]].insert(i);
+        }
+        if(map[val].size()==0){
+            map.erase(val);
+        }
+        nums.pop_back();
+        return true;
+    }
+    
+    /** Get a random element from the collection. */
+    int getRandom() { // 感觉这里判断一下有没有数组更好，万一是空的炸了
+        return nums[rand()%nums.size()];
+    }
+};
+
+/**
+ * Your RandomizedCollection object will be instantiated and called as such:
+ * RandomizedCollection* obj = new RandomizedCollection();
+ * bool param_1 = obj->insert(val);
+ * bool param_2 = obj->remove(val);
+ * int param_3 = obj->getRandom();
+ */
