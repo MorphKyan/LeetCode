@@ -1,0 +1,25 @@
+// 模拟 关注点在新加入片段
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        vector<vector<int>> ans;
+        int i=0;
+        int n=intervals.size();
+        while(i<n&&intervals[i][1]<newInterval[0]){ // 这些段在newInterval前面
+            ans.emplace_back(intervals[i]);
+            ++i;
+        }
+        // 这时i所指已经与newInterval有交叠了
+        while(i<n&&intervals[i][0]<=newInterval[1]){ // 处理所有重叠的
+            newInterval[0]=min(intervals[i][0],newInterval[0]);
+            newInterval[1]=max(intervals[i][1],newInterval[1]);
+            ++i;
+        }
+        ans.emplace_back(newInterval);
+        while(i<n){ // 右侧区域
+            ans.emplace_back(intervals[i]);
+            ++i;
+        }
+        return ans;
+    }
+};
