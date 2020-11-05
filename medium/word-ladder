@@ -1,0 +1,59 @@
+// hash 虚拟节点 dfs
+// 这里还有一个双向dfs的方法，两个set判断是否对面有我要遍历到的，set不断迭代更新（旧的就删除了）
+// 使用条件是明确的知道起始节点和终止节点，可以做的优化是，dfs时优先选择较小的set进行dfs
+class Solution {
+public:
+    unordered_map<string,int> wordId;
+    vector<vector<int>> edges;
+    int nodeNum=0;
+    
+    void addWord(string& word){
+        if(!wordId.count(word)){
+            wordId[word]=nodeNum++; //边计数边编号
+            edges.emplace_back(); //放一个空的位置
+        }
+    }
+
+    void addEdge(string& word){
+        addWord(word);
+        int id1=wordId[word];
+        for(char& c:word){ //虚拟节点，把字母换成*
+            char tmp=c;
+            c='*';
+            addWord(word);
+            int id2=wordId[word];
+            edges[id1].push_back(id2);
+            edges[id2].push_back(id1);
+            c=tmp;
+        }
+    }
+
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        for(string& word:wordList){
+            addEdge(word);
+        }
+        addEdge(beginWord);
+        if(!wordId.count(endWord)) return 0;
+        vector<int> dis(nodeNum,INT_MAX);
+        int beginId=wordId[beginWord],endId=wordId[endWord];
+        dis[beginId]=0;
+        
+        queue<int> q;
+        q.push(beginId);
+        //dfs
+        while(!q.empty()){
+            int x=q.front();
+            q.pop();
+            if(x==endId){
+                return dis[endId]/2+1; //因为添加了虚拟节点，所以要进行修正
+            }
+            for(int& it:edges[x]){
+                if(dis[it]==INT_MAX){
+                    dis[it]=dis[x]+1;
+                    q.push(it);
+                }
+            }
+        }
+        return 0;
+    }
+};
