@@ -1,0 +1,25 @@
+// 修改了sort判断条件
+class Solution {
+public:
+    int one(int x){
+        int ans=0;
+        while(x>0){
+            ans+=x%2;
+            x/=2;
+        }
+        return ans;
+    }
+
+    vector<int> sortByBits(vector<int>& arr) {
+        vector<int> ones(1e4+1);
+        for(int& num:arr){
+            ones[num]=one(num);
+        }
+        sort(arr.begin(),arr.end(),[&](int x,int y){
+            if(ones[x]<ones[y]) return true;
+            if(ones[x]>ones[y]) return false;
+            return x<y;
+        });
+        return arr;
+    }
+};
