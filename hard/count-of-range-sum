@@ -1,0 +1,65 @@
+ref: https://leetcode-cn.com/problems/count-of-range-sum/solution/fen-zhi-si-xiang-ying-yong-gui-bing-pai-xu-zuo-yi-/
+这其实就是一个归并排序加一些工作的原理
+复杂度可以达到Nlog(N)
+0, 1, ..., n/2-1 | n/2, n/2 + 1, ..., n-1
+<----- n1 ------>|<--------  n2 -------->
+
+result(all) = result(n1) + result(n2) + count(i, j) (i ∈ n1， j ∈ n2)
+
+全部针对preSum数组：它是先计算本区间符合要求的下标对，再将本区间排序的，所以排序后不影响结果，其实整个过程是相对的。
+例如计算好了preSum[0,1]符合要求的下标对，并排好了序，也计算好了preSum[2,3]并排好了序，然后计算[0,1,2,3]中符合的下标对时，左指针在0，1，右指针在2，3，不会影响最终结果的。
+
+class Solution {
+public:
+    int countRangeSumRecursive(vector<long>& sum,int lower,int upper,int left,int right){
+        if(left==right) return 0;
+        // 分治
+        int mid=(left+right)/2;
+        int n1=countRangeSumRecursive(sum,lower,upper,left,mid);
+        int n2=countRangeSumRecursive(sum,lower,upper,mid+1,right);
+        int ret=n1+n2;
+
+        // 统计下标对的数量(上边两种没有考虑到的贯通左右的情况，因为左右分别都已经考虑过了)
+        int i=left;
+        int l=mid+1;
+        int r=mid+1;
+        while(i<=mid){
+            while(l<=right&&sum[l]-sum[i]<lower) ++l;
+            while(r<=right&&sum[r]-sum[i]<=upper) ++r;
+            ret+=r-l;
+            ++i;
+        }
+
+        // 合并数组
+        vector<int> sorted(right-left+1);
+        int p1=left,p2=mid+1;
+        int p=0;
+        while(p1<=mid||p2<=right){
+            if(p1>mid){
+                sorted[p++]=sum[p2++];
+            }else if(p2>right){
+                sorted[p++]=sum[p1++];
+            }else{
+                if(sum[p1]<sum[p2]){
+                    sorted[p++]=sum[p1++];
+                }else{
+                    sorted[p++]=sum[p2++];
+                }
+            }
+        }
+        for(int i=0;i<sorted.size();++i){
+            sum[left+i]=sorted[i];
+        }
+        return ret;
+    }
+
+    int countRangeSum(vector<int>& nums, int lower, int upper) {
+        long s=0;
+        vector<long> sum{0};
+        for(int& num:nums){
+            s+=num;
+            sum.emplace_back(s);
+        }
+        return countRangeSumRecursive(sum,lower,upper,0,sum.size()-1);
+    }
+};
