@@ -1,0 +1,22 @@
+// 找规律
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        // 从右往左找逆序对
+        int i=nums.size()-2;
+        while(i>=0&&nums[i]>=nums[i+1]){
+            --i;
+        }
+        if(i>=0){
+            // 右边是递减的了 从右往左找第一个大于i的
+            int j=nums.size()-1;
+            while(j>=0&&nums[i]>=nums[j]){
+                --j;
+            }
+            swap(nums[i],nums[j]);
+        }
+        // i+1开始都是递减的，直接反转就是最小的了
+        // 没找到i的时候，i=-1，此时全数组递减，再反转就变成最小的排序了
+        reverse(nums.begin()+i+1,nums.end());
+    }
+};
