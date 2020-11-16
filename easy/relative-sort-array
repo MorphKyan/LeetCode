@@ -38,8 +38,8 @@ public:
         sort(arr1.begin(),arr1.end(),[&](int x,int y){
             return mycmp(x)<mycmp(y); // 元组排序
         });
-        if(pair{1,1}<=pair{1,1}){
-        std::cout<<1;}
+        //if(pair{1,1}<=pair{1,1}){
+        //std::cout<<1;}
         return arr1;
     }
 };
