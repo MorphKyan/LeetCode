@@ -1,0 +1,45 @@
+// 计数排序
+class Solution {
+public:
+    vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+        int upper=*max_element(arr1.begin(),arr1.end());
+        vector<int> freq(upper+1);
+        for(int& x:arr1){
+            ++freq[x];
+        }
+        vector<int> ans;
+        for(int& x:arr2){
+            for(int i=0;i<freq[x];++i){
+                ans.push_back(x);
+            }
+            freq[x]=0;
+        }
+        for(int x=0;x<=upper;++x){
+            for(int i=0;i<freq[x];++i){
+                ans.push_back(x);
+            }
+        }
+        return ans;
+    }
+};
+
+// 自定义排序 元组排序 lambda
+class Solution {
+public:
+    vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+        unordered_map<int,int> rank;
+        for(int i=0;i<arr2.size();++i){
+            rank[arr2[i]]=i;
+        }
+        auto mycmp=[&](int x)->pair<int,int>{
+            // 返回元组排序 ，首先看第一位，也就是0和1，这样在rank里面的就一定比不再rank里面的大
+            return rank.count(x)? pair{0,rank[x]}:pair{1,x};
+        };
+        sort(arr1.begin(),arr1.end(),[&](int x,int y){
+            return mycmp(x)<mycmp(y); // 元组排序
+        });
+        if(pair{1,1}<=pair{1,1}){
+        std::cout<<1;}
+        return arr1;
+    }
+};
