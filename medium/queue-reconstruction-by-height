@@ -1,0 +1,63 @@
+// 自定义排序 再插入 原地
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        sort(people.begin(),people.end(),[](vector<int>& u,vector<int>& v){
+            return u[0]>v[0]||(u[0]==v[0]&&u[1]<v[1]);
+        });
+        int i=0;
+        while(i<people.size()){
+            if(i>people[i][1]){
+                people.insert(people.begin()+people[i][1],people[i]);
+                people.erase(people.begin()+i+1);
+            }
+            ++i;
+        }
+        return people;
+    }
+};
+
+// 自定义排序 再插入 额外空间 快一点
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        sort(people.begin(),people.end(),[&](vector<int> u,vector<int> v){
+            return u[0]>v[0]||(u[0]==v[0]&&u[1]<v[1]);
+        });
+        vector<vector<int>> ans;
+        for(int i=0;i<people.size();++i){
+            if(i>people[i][1]){
+                ans.insert(ans.begin()+people[i][1],people[i]);
+            }
+            else{
+                ans.emplace_back(people[i]);
+            }
+        }
+        return ans;
+    }
+};
+
+// 1升2降 直接安排位置
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        sort(people.begin(),people.end(),[](vector<int>& u,vector<int>& v){
+            return u[0]<v[0]||(u[0]==v[0]&&u[1]>v[1]);
+        });
+        int n=people.size();
+        vector<vector<int>> ans(n);
+        for(const vector<int>& person:people){
+            int spaces=person[1]+1;
+            for(int i=0;i<n;++i){
+                if(ans[i].empty()){
+                    --spaces;
+                    if(!spaces){
+                        ans[i]=person;
+                        break;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
