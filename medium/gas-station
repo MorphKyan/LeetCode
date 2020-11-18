@@ -1,0 +1,19 @@
+// 跑一圈整体剩余>0才有可能跑完，然后画一个剩余油量的折线图
+// 从折线图最低点开始跑 此时总的油量按累计来说是最多的
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n=gas.size();
+        int minG=INT_MAX;
+        int minIdx=-1;
+        int cur=0;
+        for(int i=0;i<n;++i){
+            cur+=gas[i]-cost[i];
+            if(cur<minG){
+                minG=cur;
+                minIdx=i;
+            }
+        }
+        return cur<0? -1:(minIdx+1)%n;
+    }
+};
