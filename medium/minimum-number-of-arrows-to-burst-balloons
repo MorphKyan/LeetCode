@@ -1,0 +1,20 @@
+// 先排序 再贪心
+// 想明白了这个cur[0]>pos了 也就是左边界比右边界大了，那这个cur的右边界就是下一次循环的左边界了
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        if(points.empty()) return 0;
+        sort(points.begin(),points.end(),[](const vector<int>&u,const vector<int>& v){
+            return u[1]<v[1];
+        });
+        int pos=points[0][1]; // 第一个区间的右边界
+        int ans=1;
+        for(const vector<int>& cur:points){
+            if(cur[0]>pos){
+                ++ans;
+                pos=cur[1];
+            }
+        }
+        return ans;
+    }
+};
