@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+// 二分查找 位运算 一种思路
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if(!root) return 0;
+        // 计算层数
+        int level=0;
+        TreeNode* node=root;
+        while(node->left){
+            ++level;
+            node=node->left;
+        }
+        // 上下界 下取不到上取的到
+        int low=1<<level,high=(1<<(level+1))-1;
+        // 二分查找
+        while(low<high){
+            int mid=((high-low+1)>>1)+low;
+            if(exists(root,level,mid)){
+                low=mid;
+            }else{
+                high=mid-1;
+            }
+        }
+        return low;
+    }
+    
+    bool exists(TreeNode* root,int level,int k){
+        // 由高到低的位数代表由根到叶子的路径 初始化MASK
+        int bits=1<<(level-1);
+        TreeNode* node=root;
+        while(node&&bits>0){
+            if(!(bits&k)){
+                node=node->left;
+            }else{
+                node=node->right;
+            }
+            bits>>=1;
+        }
+        return node!=NULL;
+    }
+};
