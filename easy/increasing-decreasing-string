@@ -1,0 +1,27 @@
+// 桶计数 其实题意是升序降序分别加到字符串尾部
+// 这样统计数量就免去了遍历
+class Solution {
+public:
+    string sortString(string s) {
+        vector<int> num(26);
+        for(char& c:s){
+            ++num[c-'a'];
+        }
+        string ans="";
+        while(ans.size()<s.size()){
+            for(int i=0;i<26;++i){
+                if(num[i]){
+                    --num[i];
+                    ans+=i+'a';
+                }
+            }
+            for(int i=25;i>=0;--i){
+                if(num[i]){
+                    --num[i];
+                    ans+=i+'a';
+                }
+            }
+        }
+        return ans;
+    }
+};
