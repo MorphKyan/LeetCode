@@ -1,0 +1,37 @@
+// 基数排序
+class Solution {
+public:
+    int maximumGap(vector<int>& nums) {
+        int n=nums.size();
+        if(n<2) return 0;
+        vector<int> buff(n);
+        int exp=1; // 限制位数用
+        int max_one=*max_element(nums.begin(),nums.end());
+        while(max_one>=exp){
+            vector<int> braket(10);
+            // 一次遍历 从最小位开始
+            for(int& num:nums){
+                ++braket[(num/exp)%10];
+            }
+            // 叠加计数
+            for(int i=1;i<10;++i){
+                braket[i]+=braket[i-1];
+            }
+            // 排序放到buff中 倒序这样可以直接在计数上减
+            for(int i=n-1;i>=0;--i){
+                int digit=(nums[i]/exp)%10;
+                buff[braket[digit]-1]=nums[i]; // 这里注意-1 不要越界
+                --braket[digit];
+            }
+            // 复制到nums中
+            copy(buff.begin(),buff.end(),nums.begin()); // 空间复杂度O(n)
+            exp*=10;
+        }
+        // 对已经排序好的数组再次遍历查找最大差
+        int ans=0;
+        for(int i=1;i<n;++i){
+            ans=max(ans,nums[i]-nums[i-1]);
+        }
+        return ans;
+    }
+};
