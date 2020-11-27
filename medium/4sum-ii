@@ -1,0 +1,22 @@
+// 分成两对，一对Hash保存
+class Solution {
+public:
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+        unordered_map<int,int> map;
+        int ans=0;
+        for(int& u:A){
+            for(int& v:B){
+                ++map[u+v];
+            }
+        }
+        for(int& u:C){
+            for(int& v:D){
+                int sumCD=u+v;
+                if(map.count(-sumCD)){
+                    ans+=map[-sumCD];
+                }
+            }
+        }
+        return ans;
+    }
+};
