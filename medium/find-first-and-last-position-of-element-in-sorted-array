@@ -1,3 +1,4 @@
+// 就二分法嘛
 class Solution {
 public:
     vector<int> searchRange(vector<int>& nums, int target) {
