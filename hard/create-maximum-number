@@ -1,0 +1,81 @@
+class Solution {
+public:
+    // 单调栈 最开头的数应该最大
+    vector<int> maxSub(vector<int> nums1,int n){
+        int len=nums1.size();
+        vector<int> stack(n,0);
+        int top=-1; // 顶的位置
+        int remain=nums1.size()-n;
+        for(int i=0;i<nums1.size();++i){
+            int num=nums1[i];
+            // 出栈
+            while(top>=0&&stack[top]<num&&remain>0){
+                --top;
+                --remain;
+            }
+            if(top<n-1){
+                stack[++top]=num;
+            }else{
+                --remain;
+            }
+        }
+        return stack;
+    }
+    
+    // 自定义比较函数，比较的是剩余数组的大小，一样大先走多的
+    int compare(vector<int>& one, int index1, vector<int>& two, int index2) {
+        int x = one.size(), y = two.size();
+        while (index1 < x && index2 < y) {
+            int tag = one[index1++] - two[index2++];
+            if (tag != 0) return tag;
+        }
+        return (x - index1) - (y - index2);
+    }
+
+    vector<int> merge(vector<int>&nums1,vector<int>&nums2){
+        int m=nums1.size(),n=nums2.size();
+        if(m==0) return nums2;
+        if(n==0) return nums1;
+        int len=m+n;
+        vector<int> ans(len);
+        int i=0,j=0;
+        for (int k=0; k<len;k++) {
+            if (compare(nums1,i,nums2,j)>0){
+                ans[k]=nums1[i++];
+            }else{
+                ans[k]=nums2[j++];
+            }
+        }
+        return ans;
+    }
+
+    vector<int> maxNumber(vector<int>& nums1, vector<int>& nums2, int k) {
+        int m=nums1.size(),n=nums2.size();
+        vector<int> ans(k,0);
+        int end=min(k,m);
+        for(int i=max(0,k-n);i<=end;++i){
+            vector<int> s1=maxSub(nums1,i);
+            std::cout<<"s1:";
+            for(int x:s1) std::cout<<x;
+            std::cout<<"\n";
+            vector<int> s2=maxSub(nums2,k-i);
+            std::cout<<"s2:";
+            for(int x:s2) std::cout<<x;
+            std::cout<<"\n";
+            vector<int> tmp=merge(s1,s2);
+            std::cout<<"tmp:";
+            for(int x:tmp) std::cout<<x;
+            std::cout<<"\n";
+            for(int j=0;j<tmp.size();++j){
+                std::cout<<tmp[j];
+                if(ans[j]<tmp[j]){
+                    ans.swap(tmp);
+                    break;
+                }else if(ans[j]>tmp[j]){
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+};
