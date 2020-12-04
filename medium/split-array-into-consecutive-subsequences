@@ -1,0 +1,31 @@
+// 这思路太牛逼了，贪心+hash
+class Solution {
+public:
+    bool isPossible(vector<int>& nums) {
+        unordered_map<int,int> numCount,tail;
+        for(int& num:nums){
+            numCount[num]++;
+        }
+
+        for(int& num:nums){
+            if(numCount[num]==0) continue;
+            // 接在前面的尾部
+            if(numCount[num]>0&&tail[num-1]>0){
+                numCount[num]--;
+                tail[num-1]--;
+                tail[num]++;
+            }
+            // 新的串
+            else if(numCount[num]>0&&numCount[num+1]>0&&numCount[num+2]>0){
+                numCount[num]--;
+                numCount[num+1]--;
+                numCount[num+2]--;
+                tail[num+2]++;
+            }
+            else{
+                return false;
+            }
+        }
+        return true;
+    }
+};
