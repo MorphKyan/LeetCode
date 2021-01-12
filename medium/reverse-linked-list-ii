@@ -1,0 +1,35 @@
+// ref:https://labuladong.gitbook.io/algo/shu-ju-jie-gou-xi-lie/shou-ba-shou-shua-lian-biao-ti-mu-xun-lian-di-gui-si-wei/di-gui-fan-zhuan-lian-biao-de-yi-bu-fen
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+
+// 递归方法
+class Solution {
+public:
+    // 反转前N个
+    ListNode* successor=NULL;
+    ListNode* reverseN(ListNode* head,int n){
+        if(n==1){
+            successor=head->next;
+            return head;
+        }
+        ListNode* last=reverseN(head->next,n-1);
+        head->next->next=head;
+        head->next=successor;
+        return last;
+    }
+
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if(m==1){
+            return reverseN(head,n);
+        }
+        head->next=reverseBetween(head->next,m-1,n-1);
+        return head;
+    }
+};
